@@ -11,10 +11,10 @@
   // 実行中のスクリプトを参照する
   var currentScript = document.currentScript;
 
-  // <sample-element>のプロトタイプ
-  var SampleElementPrototype = Object.create(HTMLElement.prototype);
+  // <j3-editor>のプロトタイプ
+  var jThreeEditorPrototype = Object.create(HTMLElement.prototype);
 
-  SampleElementPrototype.createdCallback = function () {
+  jThreeEditorPrototype.createdCallback = function () {
 
     // <sample-element>にShadow Rootを生成する
     var shadowRoot = this.createShadowRoot();
@@ -31,6 +31,6 @@
 
   // <sample-element>を定義する
   document.registerElement('j3-editor', {
-    prototype: SampleElementPrototype
+    prototype: jThreeEditorPrototype
   });
 </script>
