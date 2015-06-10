@@ -5,9 +5,19 @@
     <div class="icon"></div>
   </j3-button>
   <j3-editor>
-    <editor-html></editor-html>
-    <editor-javascript></editor-javascript>
-    <content></content>
+    <j3-frame>
+      <j3-info>
+        <j3-title>
+        </j3-title>
+        <j3-description>
+        </j3-description>
+      </j3-info>
+      <j3-screen>
+      </j3-screen>
+      <j3-start>
+        play
+      </j3-start>
+    </j3-frame>
   </j3-editor>
   <style>
     :host{
@@ -15,13 +25,77 @@
       height: 0px;
       width: 100%;
       display: block;
-      -webkit-transition: all .4s cubic-bezier(0, 0, 0, 0.93);
-      transition: all .4s cubic-bezier(0, 0, 0, 0.93);
+      -webkit-transition: height .4s cubic-bezier(0, 0, 0, 0.93);
+      transition: height .4s cubic-bezier(0, 0, 0, 0.93);
     }
     :host(.open){
       height: 400px;
     }
+    j3-frame{
+      box-sizing: border-box;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      padding: 32px;
+      z-index: 6;
+      display: block;
+    }
+    j3-start{
+      position: relative;
+      display: inline-block;
+      color: black;
+
+    }
+    j3-screen{
+      -webkit-transition: left .4s cubic-bezier(0, 0, 0, 0.93);
+      transition: left .4s cubic-bezier(0, 0, 0, 0.93);
+      background-color: white;
+      height: 100%;
+      width: 40%;
+      left: -42%;
+      display: inline-block;
+      box-shadow: 12px 0px 12px -4px rgba(0,0,0,0.2);
+      z-index: 10;
+      box-sizing: border-box;
+      border-bottom: solid 1px #ddd;
+      position: absolute;
+      top: 0;
+    }
+    j3-screen.open{
+      left: 0%;
+    }
+   /* j3-screen:after{
+      border-bottom: 0px solid transparent;
+      border-left: 0px solid black;
+      border-right: 31px solid transparent;
+      height: 0;
+      content: ">";
+      display: block;
+      position: absolute;
+      width: 20px;
+      right: -50px;
+      border-top: 84px solid rgba(255, 255, 255, 1);
+    }*/
+    j3-editor{
+      overflow: hidden;
+      height: 100%;
+      width: 100%;
+      background-color: #90CAF9;
+      display: block;
+    }
+    j3-editor:after{
+      content: "";
+      display: block;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 5;
+      box-shadow: 0px 2px 11px 0px rgba(0,0,0,0.4) inset;
+      top: 0;
+      left: 0;
+    }
     j3-button{
+      z-index: 100;
       background-color: #00BCD4;
       font-weight: bold;
       color: #666;
@@ -79,15 +153,16 @@
 
   jThreeEditorPrototype.attachedCallback = function() {
     var root = this;
-
+    var j3screen = root.shadowRoot.querySelector("j3-screen");
+    var j3title = root.shadowRoot.querySelector("j3-title");
+    var j3description = root.shadowRoot.querySelector("j3-description");
     var xmlHttp;
     xmlHttp = new XMLHttpRequest();
     xmlHttp.open("GET", this.getAttribute("html"), true);
-    var huga = this;
     xmlHttp.onload = function (e) {
       if (xmlHttp.readyState === 4) {
         if (xmlHttp.status === 200) {
-          huga.shadowRoot.querySelector("editor-html").textContent = xmlHttp.responseText;
+          root.shadowRoot.querySelector("editor-html").textContent = xmlHttp.responseText;
           console.log(xmlHttp.responseText);
         } else {
           console.error(xmlHttp.statusText);
@@ -99,15 +174,33 @@
     };
     xmlHttp.send(null);
 
-    // console.log(this.shadowRoot.querySelector("editor-html"));
-    // console.log("showContent:" + this.innerHTML);
+    j3title.textContent = root.querySelector("title").innerText;
+    j3description.textContent = root.querySelector("description").innerText;
+
     // console.log(this.getAttribute("html"));
     // console.log(this.getAttribute("javascript"));
     this.shadowRoot.querySelector("j3-button").addEventListener('click', function(){
       if(root.classList.contains('open')){
-        root.classList.remove('open')
+        if(j3screen.classList.contains('open')){
+          j3screen.classList.remove('open');
+
+          j3screen.addEventListener("webkitTransitionEnd", function(event){
+            root.classList.remove('open');
+            this.removeEventListener("webkitTransitionEnd", arguments.callee, false);
+          }, false);
+
+        }else{
+          root.classList.remove('open');
+        }
       }else{
-        root.classList.add('open')
+        root.classList.add('open');
+      }
+    });
+    this.shadowRoot.querySelector("j3-start").addEventListener('click', function(){
+      if(j3screen.classList.contains('open')){
+        j3screen.classList.remove('open')
+      }else{
+        j3screen.classList.add('open')
       }
     });
 
