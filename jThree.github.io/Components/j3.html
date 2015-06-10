@@ -1,19 +1,58 @@
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
-<template id='editor'>
-  <editor-html></editor-html>
-  <editor-javascript></editor-javascript>
-  <content></content>
+
+<template id='editSet'>
+  <j3-button>
+    <div class="icon"></div>
+  </j3-button>
+  <j3-editor>
+    <editor-html></editor-html>
+    <editor-javascript></editor-javascript>
+    <content></content>
+  </j3-editor>
   <style>
-   :host {display: block;}
+    :host{
+      position: relative;
+      height: 0px;
+      width: 100%;
+      display: block;
+      -webkit-transition: all .4s cubic-bezier(0, 0, 0, 0.93);
+      transition: all .4s cubic-bezier(0, 0, 0, 0.93);
+    }
+    :host(.open){
+      height: 400px;
+    }
+    j3-button{
+      background-color: #00BCD4;
+      font-weight: bold;
+      color: #666;
+      display: inline-block;
+      padding: 15px;
+      font-size: 32px;
+      box-sizing: content-box;
+      line-height: 31px;
+      width: 32px;
+      border-radius: 50%;
+      color: white;
+      box-shadow: 0 3px 5px -1px rgba(0,0,0,.14),0 6px 10px 0 rgba(0,0,0,.098),0 1px 18px 0 rgba(0,0,0,.084);
+      position: absolute;
+      top: -31px;
+      right: 24px;
+      height: 32px;
+      text-align: right;
+    }
+    j3-button .icon{
+      width: 100%;
+      height: 100%;
+      background-image: url("./Components/pencil.png");
+      background-size: cover;
+    }
+/*   :host {display: block;}
    :host(.blue) {background-color: blue;}
    p{ color: darkred; }
    :host editor-html {white-space: pre;};
-   ::content p{color: yellow};
+   ::content p{color: yellow};*/
   </style>
 </template>
-<script type="text/javascript"
- src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
 
 <script>
   // 実行中のスクリプトを参照する
@@ -28,7 +67,7 @@
     var shadowRoot = this.createShadowRoot();
 
     // <template>を取得する
-    var template = currentScript.ownerDocument.querySelector('#editor');
+    var template = currentScript.ownerDocument.querySelector('#editSet');
 
     // <template>の中の要素をコピーする
     var clone = document.importNode(template.content, true);
@@ -39,7 +78,7 @@
   };
 
   jThreeEditorPrototype.attachedCallback = function() {
-    var hoge = this.shadowRoot.querySelector('p');
+    var root = this;
 
     var xmlHttp;
     xmlHttp = new XMLHttpRequest();
@@ -60,21 +99,22 @@
     };
     xmlHttp.send(null);
 
-    console.log(this.shadowRoot.querySelector("editor-html"));
-
-
-
-    console.log("showContent:" + this.innerHTML);
-    console.log(this.getAttribute("html"));
-    console.log(this.getAttribute("javascript"));
-    // hoge.addEventListener('click', function(){
-      // alert("helo");
-    // });
+    // console.log(this.shadowRoot.querySelector("editor-html"));
+    // console.log("showContent:" + this.innerHTML);
+    // console.log(this.getAttribute("html"));
+    // console.log(this.getAttribute("javascript"));
+    this.shadowRoot.querySelector("j3-button").addEventListener('click', function(){
+      if(root.classList.contains('open')){
+        root.classList.remove('open')
+      }else{
+        root.classList.add('open')
+      }
+    });
 
   }
 
   // <sample-element>を定義する
-  document.registerElement('j3-editor', {
+  document.registerElement('j3-editSet', {
     prototype: jThreeEditorPrototype
   });
 
