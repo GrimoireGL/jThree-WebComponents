@@ -1,13 +1,19 @@
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
 <template id='editor'>
-  <p class="hoge">Hello,World</p>
+  <editor-html></editor-html>
+  <editor-javascript></editor-javascript>
   <content></content>
   <style>
    :host {display: block;}
    :host(.blue) {background-color: blue;}
    p{ color: darkred; }
+   :host editor-html {white-space: pre;};
    ::content p{color: yellow};
   </style>
 </template>
+<script type="text/javascript"
+ src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
 
 <script>
   // 実行中のスクリプトを参照する
@@ -34,10 +40,36 @@
 
   jThreeEditorPrototype.attachedCallback = function() {
     var hoge = this.shadowRoot.querySelector('p');
+
+    var xmlHttp;
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("GET", this.getAttribute("html"), true);
+    var huga = this;
+    xmlHttp.onload = function (e) {
+      if (xmlHttp.readyState === 4) {
+        if (xmlHttp.status === 200) {
+          huga.shadowRoot.querySelector("editor-html").textContent = xmlHttp.responseText;
+          console.log(xmlHttp.responseText);
+        } else {
+          console.error(xmlHttp.statusText);
+        }
+      }
+    };
+    xmlHttp.onerror = function (e) {
+      console.error(xmlHttp.statusText);
+    };
+    xmlHttp.send(null);
+
+    console.log(this.shadowRoot.querySelector("editor-html"));
+
+
+
     console.log("showContent:" + this.innerHTML);
-    hoge.addEventListener('click', function(){
-      alert("helo");
-    });
+    console.log(this.getAttribute("html"));
+    console.log(this.getAttribute("javascript"));
+    // hoge.addEventListener('click', function(){
+      // alert("helo");
+    // });
 
   }
 

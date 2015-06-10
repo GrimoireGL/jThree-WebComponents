@@ -1,0 +1,30 @@
+<goml>
+  <head>
+    <geo id="geo0" type="Cube" param="3 3 3" />
+    <geo id="geo1" type="Icosahedron" param="2.5" />
+    <mtl id="mtl1" type="MeshLambert" param="color: #00f;" />
+
+    <rdr frame="body" camera="camera:first" param="antialias: true; clearColor: #fff;"/>
+  </head>
+  <body>
+    <scene>
+      <mesh geo="#geo0" mtl="#mtl1" />
+      <mesh geo="#geo0" mtl="#mtl1" style="positionX: 7;" />
+      <mesh geo="#geo0" mtl="#mtl1" style="positionX: -7;" />
+
+      <mesh geo="#geo0" mtl="#mtl1" style="positionY: 7;" />
+      <mesh geo="#geo0" mtl="#mtl1" style="position: 7 7 0;" />
+      <mesh geo="#geo0" mtl="#mtl1" style="position: -7 7 0;" />
+
+      <obj style="positionY: 14;">
+        <mesh geo="#geo0" mtl="#mtl1" />
+        <mesh geo="#geo0" mtl="#mtl1" style="positionX: 7;" />
+        <mesh geo="#geo0" mtl="#mtl1" style="positionX: -7;" />
+      </obj>
+
+      <camera style="cameraFar: 100000; position: 6 13 20; lAtY: 7;" />
+      <light type="Amb" style="lightColor: #222;" />
+      <light type="Dir" style="position: 1 3 5;" />
+    </scene>
+  </body>
+</goml>
