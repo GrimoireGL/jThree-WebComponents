@@ -1,0 +1,50 @@
+<template id='editor'>
+  <p class="hoge">Hello,World</p>
+  <content></content>
+  <style>
+   :host {display: block;}
+   :host(.blue) {background-color: blue;}
+   p{ color: darkred; }
+   ::content p{color: yellow};
+  </style>
+</template>
+
+<script>
+  // 実行中のスクリプトを参照する
+  var currentScript = document.currentScript;
+
+  // <j3-editor>のプロトタイプ
+  var jThreeEditorPrototype = Object.create(HTMLElement.prototype);
+
+  jThreeEditorPrototype.createdCallback = function () {
+
+    // <j3-editor>にShadow Rootを生成する
+    var shadowRoot = this.createShadowRoot();
+
+    // <template>を取得する
+    var template = currentScript.ownerDocument.querySelector('#editor');
+
+    // <template>の中の要素をコピーする
+    var clone = document.importNode(template.content, true);
+
+    // 生成した<style>と<input type='button'>と<button>をShadow Rootに追加する
+    shadowRoot.appendChild(clone);
+
+  };
+
+  jThreeEditorPrototype.attachedCallback = function() {
+    var hoge = this.shadowRoot.querySelector('p');
+    console.log("showContent:" + this.innerHTML);
+    hoge.addEventListener('click', function(){
+      alert("helo");
+    });
+
+  }
+
+  // <sample-element>を定義する
+  document.registerElement('j3-editor', {
+    prototype: jThreeEditorPrototype
+  });
+
+
+</script>
