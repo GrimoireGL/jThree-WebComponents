@@ -1,0 +1,146 @@
+html, body{
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  margin: 0px;
+  padding: 0px;
+}
+
+body{
+  background-color: #ddd;
+}
+
+.padding-w-16{
+  padding: 0px 16px;
+}
+.box{
+  width: 100%;
+  height: 240px;
+}
+.blue{
+  background-color: blue;
+}
+.red{
+  background-color: red;
+}
+.base{
+  height: 500px;
+  width: 500px;
+}
+
+.flex{
+  padding: 0px !important;
+  border-bottom: 1px solid #ddd;
+}
+.flex:last-child{
+  border: none;
+  box-shadow: 0 3px 1px -2px rgba(0,0,0,.14),0 2px 2px 0 rgba(0,0,0,.098),0 1px 5px 0 rgba(0,0,0,.084);
+}
+
+.frame{
+  background-color: white;
+
+}
+j3-wrap{
+  position: relative;
+  height: 0px;
+  width: 100%;
+  display: block;
+  -webkit-transition: all .4s cubic-bezier(0, 0, 0, 0.93);
+  transition: all .4s cubic-bezier(0, 0, 0, 0.93);
+}
+j3-wrap.open{
+  height: 400px;
+}
+j3-button{
+  background-color: #00BCD4;
+  font-weight: bold;
+  color: #666;
+  display: inline-block;
+  padding: 15px;
+  font-size: 32px;
+  box-sizing: content-box;
+  line-height: 31px;
+  width: 32px;
+  border-radius: 50%;
+  color: white;
+  box-shadow: 0 3px 5px -1px rgba(0,0,0,.14),0 6px 10px 0 rgba(0,0,0,.098),0 1px 18px 0 rgba(0,0,0,.084);
+  position: absolute;
+  top: -31px;
+  right: 24px;
+  text-align: right;
+}
+
+/*=============== layout*/
+section.title .wrap{
+  position: absolute;
+  height: 128px;
+  bottom: 0px;
+  width: 100%;
+}
+section.title .wrap img{
+  opacity: 0.9;
+  width: 300px;
+  bottom: 0px;
+  padding: 16px 32px;
+  position: absolute;
+  display: inline-block;
+}
+section.title ul.breadcrumb{
+  left: 364px;
+  position: absolute;
+  bottom: 0px;
+  margin: 0px;
+  bottom: 16px;
+  font-size: 24px;
+  list-style: none;
+}
+section.title ul.breadcrumb:after{
+  display: block;
+  content: "";
+  clear: both;
+}
+section.title ul.breadcrumb li{
+  -webkit-font-smoothing: antialiased;
+  float: left;
+}
+section.title ul.breadcrumb li:after{
+  float: right;
+  content: ">";
+  display: block;
+  margin: 0px 8px;
+}
+section.title ul.breadcrumb li:last-child:after{
+  display: none;
+}
+#header img{
+  height: 48px;
+  margin-left: 10px;
+  display: inline-block;
+  position: relative;
+  margin-top: 8px;
+  opacity: 0.9;
+}
+section.title{
+  z-index: 800;
+  box-shadow: 0 3px 5px -1px rgba(0,0,0,.14),0 6px 10px 0 rgba(0,0,0,.098),0 1px 18px 0 rgba(0,0,0,.084);
+  background-color: rgb(63, 81, 181);
+  height: 240px;
+  color: white;
+  font-weight: 100;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+  top: 0px;
+}
+.frame {
+  padding: 32px;
+  padding-bottom: 64px;
+}
+.frame h1{
+  margin-top: 0px;
+  padding-left: 12px;
+  border-left: 9px solid rgb(0, 188, 212);
+  -webkit-font-smoothing: antialiased;
+  color: #555;
+  line-height: 35px;
+}
