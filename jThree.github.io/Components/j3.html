@@ -29,7 +29,45 @@
   </j3-editor>
 <style>
 
+/*syntax==========*/
+.Coloring_number {
+  color: rgb(247, 98, 140);
+}
+.Coloring_baseword {
+  color: rgb(254, 156, 0);
+}
+.Coloring_keyword {
+    color: rgb(255, 198, 0);
+}
 
+.Coloring_operator {
+    color: white;
+}
+
+.Coloring_bracket {
+    color: white;
+}
+
+.Coloring_comment {
+    color: blue;
+}
+
+.Coloring_regexp {
+    color: orange;
+}
+
+.Coloring_strings {
+    color: rgb(58, 217, 0);
+}
+
+.Coloring_functionName {
+    color: white;
+}
+
+.Coloring_color {
+    color: #0cff00;
+}
+/*===========*/
 caret{
   display: inline-block;
   width: 0px;
@@ -154,12 +192,12 @@ j3-main j3-tabs j3-tab.active{
   border-bottom: 1px solid rgb(0, 151, 167);
 }
 j3-main textarea ,j3-main textview{
+  overflow: scroll;
   border: none;
   padding: 32px;
   box-sizing: border-box;
   display: block;
   outline: none;
-  -webkit-font-smoothing: antialiased;
   font-size: 14px;
   margin: 0px -2px 0px 0px;
   background-color: transparent;
@@ -376,12 +414,23 @@ j3-screen.open{
       }
     });
 
+    this.shadowRoot.querySelector("j3-main textarea").addEventListener('scroll', function(e){
+      root.shadowRoot.querySelector("j3-main textview").scrollTop = this.scrollTop;
+      root.shadowRoot.querySelector("j3-main textview").scrollLeft = this.scrollLeft;
+      console.log(this.scrollLeft);
+      console.log(this.scrollTop);
+      console.log("scroll");
+    });
     this.shadowRoot.querySelector("j3-main textarea").addEventListener('click', function(e){
       var index = this.selectionStart;
       var targetString = "" + this.value;
       console.log(index);
-      var text = escapeHTML(targetString.substring(0, index)) + "<caret><caret-inner></caret-inner></caret>" + escapeHTML(targetString.substring(index));
-      root.shadowRoot.querySelector("j3-main textview").innerHTML = text.replace(/\r?\n/g, "<br>");
+      var resultString = targetString.substring(0, index);
+            var text = replaceTag(targetString.substring(0, index)) + "__caret__" + replaceTag(targetString.substring(index));
+          text = coloringRegExp(text);
+          text = coloring(text);
+          text = coloringQuote(text);
+      root.shadowRoot.querySelector("j3-main textview").innerHTML = text.replace("__caret__", "<caret><caret-inner></caret-inner></caret>").replace(/\r?\n/g, "<br>");
     });
     this.shadowRoot.querySelector("j3-main textarea").addEventListener('keydown', function(e){
       var index = this.selectionStart;
@@ -390,8 +439,11 @@ j3-screen.open{
       var targetString = "" + this.value;
       // "BC" の切り出しを行う
       var resultString = targetString.substring(0, index);
-      var text = escapeHTML(targetString.substring(0, index)) + "<caret><caret-inner></caret-inner></caret>" + escapeHTML(targetString.substring(index));
-      root.shadowRoot.querySelector("j3-main textview").innerHTML = text.replace(/\r?\n/g, "<br>");
+            var text = replaceTag(targetString.substring(0, index)) + "__caret__" + replaceTag(targetString.substring(index));
+          text = coloringRegExp(text);
+          text = coloring(text);
+          text = coloringQuote(text);
+      root.shadowRoot.querySelector("j3-main textview").innerHTML = text.replace("__caret__", "<caret><caret-inner></caret-inner></caret>").replace(/\r?\n/g, "<br>");
 
       console.log(resultString.replace(/\r?\n/g, "<j3-br>").countR("<j3-br>"));
       console.log(resultString.replace(/\r?\n/g, ""));
@@ -466,8 +518,11 @@ j3-screen.open{
       var targetString = "" + this.value;
       // "BC" の切り出しを行う
       var resultString = targetString.substring(0, index);
-      var text = escapeHTML(targetString.substring(0, index)) + "<caret><caret-inner></caret-inner></caret>" + escapeHTML(targetString.substring(index));
-      root.shadowRoot.querySelector("j3-main textview").innerHTML = text.replace(/\r?\n/g, "<br>");
+            var text = replaceTag(targetString.substring(0, index)) + "__caret__" + replaceTag(targetString.substring(index));
+          text = coloringRegExp(text);
+          text = coloring(text);
+          text = coloringQuote(text);
+      root.shadowRoot.querySelector("j3-main textview").innerHTML = text.replace("__caret__", "<caret><caret-inner></caret-inner></caret>").replace(/\r?\n/g, "<br>");
 
       console.log(resultString.replace(/\r?\n/g, "<j3-br>").countR("<j3-br>"));
       console.log(resultString.replace(/\r?\n/g, ""));
@@ -510,6 +565,289 @@ function escapeHTML(str) {
             .replace(/"/g, '&quot;')
             .replace(/'/g, '&#039;');
 }
+
+
+// javascript カラーリング
+
+
+function replaceTag(codeStr) {
+  function replacer(s) {
+    var esc = "";
+    if        (s === ";") {
+      esc = "&#059;";
+    } else if (s === "&") {
+      esc = "&amp;";
+    } else if (s === "<") {
+      esc = "&lt;";
+    } else if (s === ">") {
+      esc = "&gt;";
+    } else if (s === "") {
+      esc = "&nbsp;"
+    }
+    return esc;
+  }
+
+  codeStr = codeStr.replace(/[;&<>]/g, replacer);
+  return codeStr;
+}
+
+function coloringRegExp (codeStr) {
+  var regReg = /([{(=[]\s*|^\s*)(\/(?!\/).+\/[gmi]{0,3})(\s*)(?![([{])/gm;
+  codeStr = codeStr.replace(regReg, "$1<span class=\"Coloring_regexp\">$2</span>$3");
+  return codeStr;
+}
+
+function coloring (codeStr) {
+  var number = [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      baseword = [
+        "\\breturn\\b",
+        "\\balert\\b",
+        "\\$"
+      ],
+      keyword = [
+        "\\bbreak\\b",
+        "\\bcase\\b",
+        "\\bconst\\b",
+        "\\bcontinue\\b",
+        "\\bdebugger\\b",
+        "\\bdelete\\b",
+        "\\bdo\\b",
+        "\\bwhile\\b",
+        "\\bexport\\b",
+        "\\bfor\\b",
+        "\\bin\\b",
+        "\\bfunction\\b",
+        "\\bif\\b",
+        "\\binstanceof\\b",
+        "\\belse\\b",
+        "\\bswitch\\b",
+        "\\bthrow\\b",
+        "\\bthis\\b",
+        "\\btry\\b",
+        "\\btypeof\\b",
+        "\\bundefined\\b",
+        "\\bcatch\\b",
+        "\\bvar\\b",
+        "\\bvoid\\b",
+        "\\bwith\\b",
+        "\\btrue\\b",
+        "\\bfalse\\b",
+        "\\bnull\\b",
+        "\\bNaN\\b"
+      ],
+      operator = [
+        "=(?!\"Coloring_|=)",
+        "\\+=",
+        "-=",
+        "\\*=",
+        "/=",
+        "&amp;=",
+        "\\^=",
+        "\\|=",
+        "%=",
+        "(?:&lt;)+=",
+        "(?:&gt;)+=",
+        "\\++",
+        "-+",
+        "/(?!/|\\*|span>)",
+        "\\*(?!/)",
+        "%",
+        "\\.",
+        "\\,",
+        "\\?",
+        "\\^",
+        "\\|+",
+        "(?:&amp;)+",
+        "~",
+        "(?:&lt;)+",
+        "(?:&gt;)+",
+        "\\!",
+        "!=+",
+        "=={1,2}",
+        ":",
+        "&#059;"
+      ],
+      bracket = [
+        "\\(",
+        "\\)",
+        "\\{",
+        "\\}",
+        "\\[",
+        "\\]"
+      ],
+      comment = [
+        "//.*(?=$|</span>)",
+        "/\\*(?:.*\n)*?.*?\\*/"
+      ],
+      regexp = [
+        "<span class=\"Coloring_regexp\">/.+/[gmi]{0,3}\\s*</span>"
+      ],
+      syntax = keyword.concat(baseword, number, operator, bracket, comment, regexp);
+  ;
+
+  var functionNameReg = /(function +)([\w$]+)( *\()/gm,
+      colorReg    = new RegExp(                               "(" +   syntax.join("|") + ")"       , "gm"),
+      numberReg   = new RegExp("<span class=\"Coloring_color\">(" +   number.join("|") + ")</span>", "gm"),
+      basewordReg = new RegExp("<span class=\"Coloring_color\">(" + baseword.join("|") + ")</span>", "gm"),
+      keywordReg  = new RegExp("<span class=\"Coloring_color\">(" +  keyword.join("|") + ")</span>", "gm"),
+      operatorReg = new RegExp("<span class=\"Coloring_color\">(" + operator.join("|") + ")</span>", "gm"),
+      bracketReg  = new RegExp("<span class=\"Coloring_color\">(" +  bracket.join("|") + ")</span>", "gm"),
+      commentReg  = new RegExp("<span class=\"Coloring_color\">(" +  comment.join("|") + ")</span>", "gm"),
+      regexpReg   = new RegExp("<span class=\"Coloring_color\">(" +   regexp.join("|") + ")</span>", "gm");
+
+  return codeStr.replace(functionNameReg, '$1<span class="Coloring_functionName">$2</span>$3')
+                .replace(colorReg       , '<span class="Coloring_color">$1</span>'           )
+                .replace(numberReg      , '<span class="Coloring_number">$1</span>'         )
+                .replace(basewordReg    , '<span class="Coloring_baseword">$1</span>'         )
+                .replace(keywordReg     , '<span class="Coloring_keyword">$1</span>'         )
+                .replace(operatorReg    , '<span class="Coloring_operator">$1</span>'        )
+                .replace(bracketReg     , '<span class="Coloring_bracket">$1</span>'         )
+                .replace(commentReg     , '<span class="Coloring_comment">$1</span>'         )
+                .replace(regexpReg      , '$1'                                               )
+  ;
+}
+
+function coloringQuote(codeStr) {
+
+  var quoteReg = /(?:<span class=|<span class="Coloring_\w+)?(?:\\?["'\n]|\/\/|\/\*|\*\/|<span class="Coloring_regexp">|<\/span>)(?:Coloring_\w+">)?/gm,
+      deleteMarkReg = /<span class="Coloring_\w+">(.+?)<\/span>/g,
+      beginLnCmntReg = /<span class="Coloring_comment">\/\//g,
+      endLnCmntReg = /<\/span>((?:\n.*)+)/gm,
+      beginMltLnCmntReg = /<span class="Coloring_comment">\/\*/g,
+      endMltLnCmntReg = /\*\/<\/span>/gm,
+      arr = [],
+      openCloseIndex = [],
+      status = {
+        isOpened : false,
+        isCommented : false,
+        isRegExp : false,
+        charOfBegin : "",
+        isLnCmntInQuote : false,
+        isMltLnCmntInQuote : false
+      },
+      markupStr = "",
+      splitStr = "",
+      reColorStr = "",
+      colorStr = "",
+      from,
+      to,
+      c,
+      i;
+
+  while (arr = quoteReg.exec(codeStr)) {
+
+    c = arr[0];
+
+    if (status.isCommented) {
+
+      if (status.charOfBegin === "//" && c === "\n") {
+        status.isCommented = false;
+      } else if (status.charOfBegin === "/*" && c === "*/") {
+        status.isCommented = false;
+      }
+
+    } else if (status.isOpened) {
+
+      if (c === status.charOfBegin || c === "\n") {
+        openCloseIndex.push(arr.index + (c === status.charOfBegin));
+        status.isOpened = false;
+      }
+
+    } else if (status.isRegExp) {
+
+      if (c === "</span>") {
+        status.isRegExp = false;
+      }
+
+    } else {
+
+      if (c === "//" || c === "/*") {
+        status.isCommented = true;
+        status.charOfBegin = c;
+      } else if (c === "\n") {
+        continue;
+      } else if (c === "\\\"" || c === "\\'") {
+        continue;
+      } else if (c === "<span class=\"Coloring_regexp\">") {
+        status.isRegExp = true;
+      } else if (c.length > 1) {
+        continue;
+      } else {
+        openCloseIndex.push(arr.index);
+        status.charOfBegin = c;
+        status.isOpened = true;
+      }
+
+    }
+  }
+
+  for (i = from = 0; i < openCloseIndex.length + 1; i++) {
+
+    to = openCloseIndex[i];
+    splitStr = codeStr.slice(from, to);
+
+    if (i & 1) {
+
+      splitStr = "<span class=\"Coloring_strings\">" + splitStr.replace(deleteMarkReg, "$1") + "</span>";
+      if (!status.isMltLnCmntInQuote && beginLnCmntReg.test(splitStr)) {
+        splitStr = splitStr.replace(beginLnCmntReg, "//");
+        status.isLnCmntInQuote = true;
+      } else if (!status.isLnCmntInQuote && beginMltLnCmntReg.test(splitStr)) {
+        splitStr = splitStr.replace(beginMltLnCmntReg, "/*");
+        status.isMltLnCmntInQuote = true;
+      }
+
+    }
+
+    if (status.isLnCmntInQuote) {
+
+      if (endLnCmntReg.test(splitStr)) {
+        splitStr.replace(endLnCmntReg, function (matchStr, p1, offset, s) {
+          reColorStr = s.slice(0, offset);
+          colorStr = p1;
+        });
+        status.isLnCmntInQuote = false;
+      } else {
+        reColorStr = splitStr;
+        colorStr = "";
+      }
+      if (i + 1 & 1) {
+        reColorStr = coloring(reColorStr);
+      }
+      splitStr = reColorStr + colorStr ;
+
+    } else if (status.isMltLnCmntInQuote) {
+
+      if (endMltLnCmntReg.test(splitStr)) {
+        splitStr = splitStr.replace(endMltLnCmntReg, "*/");
+        status.isMltLnCmntInQuote = false;
+      }
+      if (i + 1 & 1) {
+        splitStr = coloring(splitStr);
+      }
+
+    }
+
+    markupStr += splitStr;
+    from = to;
+  }
+
+  return markupStr;
+}
+
+
+
 // 半角全角
 
 var eaw = {};
@@ -519,6 +857,7 @@ if ('undefined' == typeof module) {
 } else {
   module.exports = eaw;
 }
+
 
 eaw.eastAsianWidth = function(character) {
   var x = character.charCodeAt(0);
