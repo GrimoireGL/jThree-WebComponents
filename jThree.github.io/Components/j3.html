@@ -4,8 +4,8 @@
   <j3-button>
     <div class="icon"></div>
   </j3-button>
-  <j3-screen></j3-screen>
   <j3-editor>
+    <j3-screen></j3-screen>
     <j3-wrap>
       <j3-info>
         <j3-title></j3-title>
@@ -148,9 +148,6 @@ j3-option icon{
 j3-option.refresh icon{
   background-image: url("./Components/refresh.png");
 }
-j3-editor.full j3-option.refresh{
-  display: none;
-}
 j3-option.fullscreen icon{
   background-image: url("./Components/expand.png");
 }
@@ -272,7 +269,7 @@ j3-screen{
   transition: left .4s cubic-bezier(0, 0, 0, 0.93);
   background-color: white;
   height: 100%;
-  width: 40%;
+  width: 35%;
   left: -42%;
   display: inline-block;
   box-shadow: 12px 0px 12px -4px rgba(0,0,0,0.2);
@@ -584,8 +581,6 @@ j3-screen.open{
 
 
 
-
-
     });
     this.shadowRoot.querySelector("j3-main textarea").addEventListener('keyup', function(e){
       var index = this.selectionStart;
@@ -606,12 +601,6 @@ j3-screen.open{
       console.log(resultString.replace(/\r?\n/g, ""));
     })
 
-    // $('pre code').each(function(i, block) {
-      // hljs.highlightBlock(block);
-    // });
-    // highlight();
-    // hljs.highlightBlock(this.shadowRoot.querySelector("pre code"));
-    // hljs.initHighlightingOnLoad();
   }
 
   // <sample-element>を定義する
