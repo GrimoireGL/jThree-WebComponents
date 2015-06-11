@@ -18,6 +18,7 @@
           <j3-tab>Goml</j3-tab>
         </j3-tabs>
         <textarea></textarea>
+        <textview></textview>
       </j3-main>
       <j3-options>
         <j3-option class="refresh">
@@ -133,13 +134,12 @@ j3-main j3-tabs j3-tab{
 j3-main j3-tabs j3-tab.active{
   border-bottom: 1px solid rgb(0, 151, 167);
 }
-j3-main textarea{
+j3-main textarea ,j3-main textview{
   border: none;
   padding: 32px;
   box-sizing: border-box;
   display: block;
   outline: none;
-  color: white;
   -webkit-font-smoothing: antialiased;
   font-size: 14px;
   margin: 0px -2px 0px 0px;
@@ -149,6 +149,15 @@ j3-main textarea{
   position: absolute;
   bottom: 0;
   letter-spacing: 1.1px;
+  word-wrap: break-word;
+  font: normal normal normal 11px/normal '.HelveticaNeueDeskInterface-Regular';
+}
+j3-main textarea{
+  z-index: 3;
+  color: red;
+}
+j3-main textview{
+  color: white;
 }
 /*=======================**
 **=======j3-screen=======**
@@ -348,20 +357,35 @@ j3-screen.open{
       }
     });
 
+    this.shadowRoot.querySelector("j3-main textarea").addEventListener('click', function(e){
+      var index = this.selectionStart;
+      console.log(index);
+    });
     this.shadowRoot.querySelector("j3-main textarea").addEventListener('keydown', function(e){
-      console.log(e.keyCode);
+      root.shadowRoot.querySelector("j3-main textview").innerText = this.value;
+      var index = this.selectionStart;
+      var length = this.selectionEnd - index;
+      console.log("en" + this.selectionEnd);
+      var targetString = "" + this.value;
+
+      // "BC" の切り出しを行う
+      var resultString = targetString.substring(1, index);
+      console.log(resultString.replace(/\r?\n/g, "<j3-br>").countR("<j3-br>"));
+
       if(e.keyCode == "13" || e.keyCode == "8"){
-        console.log(this.value);
       }
       if (e.keyCode === 9) {
         e.preventDefault();
         var elem = e.target;
         var val = elem.value;
         var pos = elem.selectionStart;
-        elem.value = val.substr(0, pos) + '\t' + val.substr(pos, val.length);
+        elem.value = val.substr(0, pos) + '　' + val.substr(pos, val.length);
         elem.setSelectionRange(pos + 1, pos + 1);
       }
     });
+    this.shadowRoot.querySelector("j3-main textarea").addEventListener('keyup', function(e){
+
+    })
 
     // $('pre code').each(function(i, block) {
       // hljs.highlightBlock(block);
@@ -378,7 +402,13 @@ j3-screen.open{
 
 
 
-
+  String.prototype.countR = function(str) {
+      var n=0,regex = RegExp(str,'g');
+      this.replace(regex,function() {
+          n++;
+      });
+      return n;
+  }
 
 
 
