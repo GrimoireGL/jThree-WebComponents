@@ -1,0 +1,1574 @@
+
+
+<template id='editSet'>
+  <j3-button>
+    <div class="icon"></div>
+  </j3-button>
+  <j3-screen></j3-screen>
+  <j3-editor>
+    <j3-wrap>
+      <j3-info>
+        <j3-title></j3-title>
+        <j3-description></j3-description>
+      </j3-info>
+      <j3-main>
+        <j3-tabs>
+          <j3-tab class="active">HTML</j3-tab>
+          <j3-tab>JavaScript</j3-tab>
+          <j3-tab>Goml</j3-tab>
+        </j3-tabs>
+        <textarea></textarea>
+        <textview><caret><caret-inner></caret-inner></caret></textview>
+      </j3-main>
+      <j3-options>
+        <j3-option class="refresh">
+          <icon></icon>
+        </j3-option>
+      </j3-options>
+    </j3-wrap>
+  </j3-editor>
+<style>
+
+
+caret{
+  display: inline-block;
+  width: 0px;
+  height: 11px;
+  left: 0px;
+  background-color: white;
+  position: relative;
+}
+caret-inner{
+background-color: white;
+  display: block;
+  position: absolute;
+  height: 11px;
+  width: 1px;
+  bottom: 0px;
+  box-sizing: border-box;
+  top: 1px;
+}
+j3-option{
+  display: block;
+  position: relative;
+  width: 100%;
+  border-bottom: 1px solid #FFF;
+  box-sizing: border-box;
+}
+j3-option:after{
+  display: block;
+  content: "";
+  padding-top: 100%;
+}
+j3-option icon{
+  display: block;
+  position: absolute;
+  background-size: cover;
+  opacity: 0.9;
+  width: 60%;
+  height: 60%;
+  margin: 20%;
+}
+j3-option.refresh icon{
+  background-image: url("./Components/refresh.png");
+}
+
+j3-option > div{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+j3-options{
+  box-shadow: 1px 0px 2px 0px rgba(0, 0, 0, 0.89);
+  width: 5%;
+  display: block;
+  height: 100%;
+  right: 0px;
+  top: 0px;
+  position: absolute;
+  background-color: #37474F;
+  border-left: solid 2px #0097A7;
+  box-sizing: border-box;
+}
+/*=======================**
+**========j3-info========**
+**=======================*/
+j3-info{
+  padding: 24px;
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  left: 0px;
+  width: 35%;
+  top: 0px;
+  height: 100%;
+}
+j3-title{
+  display: block;
+  font-size: 24px;
+  color: whitesmoke;
+  -webkit-font-smoothing: antialiased;
+}
+j3-description{
+  font-size: 12px;
+  color: whitesmoke;
+  -webkit-font-smoothing: antialiased;
+}
+/*=======================**
+**========j3-main========**
+**=======================*/
+j3-main{
+  box-shadow: 1px 0px 6px 1px rgba(5, 6, 6, 0.94);
+  display: block;
+  position: absolute;
+  right: 5%;
+  width: 60%;
+  top: 0px;
+  height: 100%;
+  border: solid 1px #455A64;
+  background-color: #455A64;
+  box-sizing: border-box;
+}
+j3-main j3-tabs{
+  width: 100%;
+  height: 7%;
+  position: absolute;
+  top: 0;
+  display: block;
+}
+j3-main j3-tabs j3-tab{
+  box-shadow: 0px 1px 6px 0px rgba(0, 0, 0, 0.73);
+  padding: 4px 12px;
+  color: whitesmoke;
+  -webkit-font-smoothing: antialiased;
+  background-color: rgb(55, 71, 79);
+  margin: 4px;
+  display: inline-block;
+  box-sizing: border-box;
+  border-radius: 0px;
+  font-size: 12px;
+}
+j3-main j3-tabs j3-tab.active{
+  border-bottom: 1px solid rgb(0, 151, 167);
+}
+j3-main textarea ,j3-main textview{
+  border: none;
+  padding: 32px;
+  box-sizing: border-box;
+  display: block;
+  outline: none;
+  -webkit-font-smoothing: antialiased;
+  font-size: 14px;
+  margin: 0px -2px 0px 0px;
+  background-color: transparent;
+  width: 100%;
+  height: 93%;
+  position: absolute;
+  bottom: 0;
+  letter-spacing: 1.1px;
+  word-wrap: break-word;
+  font: normal normal normal 11px/normal 'monospace';
+}
+j3-main textarea{
+  z-index: 3;
+  color: transparent;
+}
+j3-main textview{
+  color: white;
+}
+/*=======================**
+**=======j3-screen=======**
+**=======================*/
+j3-screen{
+  -webkit-transition: left .4s cubic-bezier(0, 0, 0, 0.93);
+  transition: left .4s cubic-bezier(0, 0, 0, 0.93);
+  background-color: white;
+  height: 100%;
+  width: 40%;
+  left: -42%;
+  display: inline-block;
+  box-shadow: 12px 0px 12px -4px rgba(0,0,0,0.2);
+  z-index: 10;
+  box-sizing: border-box;
+  border-bottom: solid 1px #ddd;
+  position: absolute;
+  top: 0;
+}
+j3-screen.open{
+  left: 0%;
+}
+/*=========*/
+    :host{
+      position: relative;
+      height: 0px;
+      width: 100%;
+      display: block;
+      -webkit-transition: height .4s cubic-bezier(0, 0, 0, 0.93);
+      transition: height .4s cubic-bezier(0, 0, 0, 0.93);
+    }
+    :host(.open){
+      height: 400px;
+    }
+    j3-control{
+      width: 100%;
+      height: 200px;
+      positio
+      background-color: #455A64;
+    }
+    j3-wrap{
+      box-sizing: border-box;
+      position: relative;
+      width: 1100px;
+      height: 100%;
+      z-index: 6;
+      display: block;
+      margin: 0 auto;
+    }
+   /* j3-screen:after{
+      border-bottom: 0px solid transparent;
+      border-left: 0px solid black;
+      border-right: 31px solid transparent;
+      height: 0;
+      content: ">";
+      display: block;
+      position: absolute;
+      width: 20px;
+      right: -50px;
+      border-top: 84px solid rgba(255, 255, 255, 1);
+    }*/
+    j3-editor{
+      overflow: hidden;
+      height: 100%;
+      width: 100%;
+      background-color: #607D8B;
+      display: block;
+    }
+    j3-editor:after{
+      content: "";
+      display: block;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 5;
+      box-shadow: 0px 2px 11px 0px rgba(0,0,0,0.4) inset;
+      top: 0;
+      left: 0;
+    }
+    j3-button{
+      cursor: pointer;
+      z-index: 100;
+      background-color: #00BCD4;
+      font-weight: bold;
+      color: #666;
+      display: inline-block;
+      padding: 15px;
+      font-size: 32px;
+      box-sizing: content-box;
+      line-height: 31px;
+      width: 32px;
+      border-radius: 50%;
+      color: white;
+      box-shadow: 0 3px 5px -1px rgba(0,0,0,.14),0 6px 10px 0 rgba(0,0,0,.098),0 1px 18px 0 rgba(0,0,0,.084);
+      position: absolute;
+      top: -31px;
+      right: 24px;
+      height: 32px;
+      text-align: right;
+    }
+    j3-button .icon{
+      width: 100%;
+      height: 100%;
+      background-image: url("./Components/pencil.png");
+      background-size: cover;
+    }
+/*   :host {display: block;}
+   :host(.blue) {background-color: blue;}
+   p{ color: darkred; }
+   :host editor-html {white-space: pre;};
+   ::content p{color: yellow};*/
+
+
+
+
+
+
+
+
+
+</style>
+</template>
+
+<script>
+  // 実行中のスクリプトを参照する
+  var currentScript = document.currentScript;
+
+  // <j3-editor>のプロトタイプ
+  var jThreeEditorPrototype = Object.create(HTMLElement.prototype);
+
+  jThreeEditorPrototype.createdCallback = function () {
+
+    // <j3-editor>にShadow Rootを生成する
+    var shadowRoot = this.createShadowRoot();
+
+    // <template>を取得する
+    var template = currentScript.ownerDocument.querySelector('#editSet');
+
+    // <template>の中の要素をコピーする
+    var clone = document.importNode(template.content, true);
+
+    // 生成した<style>と<input type='button'>と<button>をShadow Rootに追加する
+    shadowRoot.appendChild(clone);
+
+  };
+
+  jThreeEditorPrototype.attachedCallback = function() {
+    var root = this;
+    var j3screen = root.shadowRoot.querySelector("j3-screen");
+    var j3title = root.shadowRoot.querySelector("j3-title");
+    var j3description = root.shadowRoot.querySelector("j3-description");
+    var xmlHttp;
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("GET", this.getAttribute("html"), true);
+    xmlHttp.onload = function (e) {
+      if (xmlHttp.readyState === 4) {
+        if (xmlHttp.status === 200) {
+          root.shadowRoot.querySelector("editor-html").textContent = xmlHttp.responseText;
+          console.log(xmlHttp.responseText);
+        } else {
+          console.error(xmlHttp.statusText);
+        }
+      }
+    };
+    xmlHttp.onerror = function (e) {
+      console.error(xmlHttp.statusText);
+    };
+    xmlHttp.send(null);
+
+    j3title.textContent = root.querySelector("title").innerText;
+    j3description.textContent = root.querySelector("description").innerText;
+
+    // console.log(this.getAttribute("html"));
+    // console.log(this.getAttribute("javascript"));
+    this.shadowRoot.querySelector("j3-button").addEventListener('click', function(){
+      if(root.classList.contains('open')){
+        if(j3screen.classList.contains('open')){
+          j3screen.classList.remove('open');
+
+          j3screen.addEventListener("webkitTransitionEnd", function(event){
+            root.classList.remove('open');
+            this.removeEventListener("webkitTransitionEnd", arguments.callee, false);
+          }, false);
+
+        }else{
+          root.classList.remove('open');
+        }
+      }else{
+        root.classList.add('open');
+      }
+    });
+    this.shadowRoot.querySelector("j3-option.refresh").addEventListener('click', function(){
+      if(j3screen.classList.contains('open')){
+        j3screen.classList.remove('open')
+      }else{
+        j3screen.classList.add('open')
+      }
+    });
+
+    this.shadowRoot.querySelector("j3-main textarea").addEventListener('click', function(e){
+      var index = this.selectionStart;
+      var targetString = "" + this.value;
+      console.log(index);
+      var text = escapeHTML(targetString.substring(0, index)) + "<caret><caret-inner></caret-inner></caret>" + escapeHTML(targetString.substring(index));
+      root.shadowRoot.querySelector("j3-main textview").innerHTML = text.replace(/\r?\n/g, "<br>");
+    });
+    this.shadowRoot.querySelector("j3-main textarea").addEventListener('keydown', function(e){
+      var index = this.selectionStart;
+      var length = this.selectionEnd - index;
+      console.log("en" + this.selectionEnd);
+      var targetString = "" + this.value;
+      // "BC" の切り出しを行う
+      var resultString = targetString.substring(0, index);
+      var text = escapeHTML(targetString.substring(0, index)) + "<caret><caret-inner></caret-inner></caret>" + escapeHTML(targetString.substring(index));
+      root.shadowRoot.querySelector("j3-main textview").innerHTML = text.replace(/\r?\n/g, "<br>");
+
+      console.log(resultString.replace(/\r?\n/g, "<j3-br>").countR("<j3-br>"));
+      console.log(resultString.replace(/\r?\n/g, ""));
+
+
+    var shift, ctrl;
+
+    // if (e != null) {
+    //       keycode = e.which;
+    //       ctrl    = typeof e.modifiers == 'undefined' ? e.ctrlKey : e.modifiers & Event.CONTROL_MASK;
+    //       shift   = typeof e.modifiers == 'undefined' ? e.shiftKey : e.modifiers & Event.SHIFT_MASK;
+    //       // イベントの上位伝播を防止
+    //       e.preventDefault();
+    //       e.stopPropagation();
+    //   // Internet Explorer
+    //   } else {
+    //       keycode = event.keyCode;
+    //       ctrl    = event.ctrlKey;
+    //       shift   = event.shiftKey;
+    //       // イベントの上位伝播を防止
+    //       event.returnValue = false;
+    //      event.cancelBubble = true;
+    //   }
+
+    //   // キーコードの文字を取得
+    //   keychar = String.fromCharCode(keycode).toUpperCase();
+
+    //   // Ctrl同時押しの場合
+    //   if (ctrl) {
+    //       if (keychar == "C") {
+    //           alert('Ctrl+C');
+    //       }else if(keychar =="B") {
+    //           alert('Ctrl+B');
+    //       }
+    //   } else
+    //   // Shift同時押しの場合
+    //   if (shift) {
+    //       if (keychar == "C") {
+    //           alert('Shift+C');
+    //       }else if(keychar =="B") {
+    //           alert('Shift+B');
+    //       }
+    //   // 通常のキーダウン時の場合
+    //   } else {
+    //       if (keychar == "C") {
+    //           alert('C');
+    //       }
+    //   }
+
+
+
+
+
+
+
+
+      if(e.keyCode == "13" || e.keyCode == "8"){
+      }
+      if (e.keyCode === 9) { //tab
+        e.preventDefault();
+        var elem = e.target;
+        var val = elem.value;
+        var pos = elem.selectionStart;
+        elem.value = val.substr(0, pos) + '　' + val.substr(pos, val.length);
+        elem.setSelectionRange(pos + 1, pos + 1);
+      }
+    });
+    this.shadowRoot.querySelector("j3-main textarea").addEventListener('keyup', function(e){
+      var index = this.selectionStart;
+      var length = this.selectionEnd - index;
+      console.log("en" + this.selectionEnd);
+      var targetString = "" + this.value;
+      // "BC" の切り出しを行う
+      var resultString = targetString.substring(0, index);
+      var text = escapeHTML(targetString.substring(0, index)) + "<caret><caret-inner></caret-inner></caret>" + escapeHTML(targetString.substring(index));
+      root.shadowRoot.querySelector("j3-main textview").innerHTML = text.replace(/\r?\n/g, "<br>");
+
+      console.log(resultString.replace(/\r?\n/g, "<j3-br>").countR("<j3-br>"));
+      console.log(resultString.replace(/\r?\n/g, ""));
+      if (e.keyCode === 9) {
+        e.preventDefault();
+      }
+    })
+
+    // $('pre code').each(function(i, block) {
+      // hljs.highlightBlock(block);
+    // });
+    // highlight();
+    // hljs.highlightBlock(this.shadowRoot.querySelector("pre code"));
+    // hljs.initHighlightingOnLoad();
+  }
+
+  // <sample-element>を定義する
+  document.registerElement('j3-editSet', {
+    prototype: jThreeEditorPrototype
+  });
+
+
+// 指定の文字数
+
+  String.prototype.countR = function(str) {
+      var n=0,regex = RegExp(str,'g');
+      this.replace(regex,function() {
+          n++;
+      });
+      return n;
+  }
+
+// エスケープ
+
+function escapeHTML(str) {
+  return str.replace(/&/g, '&amp;')
+            .replace(/ /g, '&nbsp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+}
+// 半角全角
+
+var eaw = {};
+
+if ('undefined' == typeof module) {
+  window.eastasianwidth = eaw;
+} else {
+  module.exports = eaw;
+}
+
+eaw.eastAsianWidth = function(character) {
+  var x = character.charCodeAt(0);
+  var y = (character.length == 2) ? character.charCodeAt(1) : 0;
+  var codePoint = x;
+  if ((0xD800 <= x && x <= 0xDBFF) && (0xDC00 <= y && y <= 0xDFFF)) {
+    x &= 0x3FF;
+    y &= 0x3FF;
+    codePoint = (x << 10) | y;
+    codePoint += 0x10000;
+  }
+
+  if ((0x3000 == codePoint) ||
+      (0xFF01 <= codePoint && codePoint <= 0xFF60) ||
+      (0xFFE0 <= codePoint && codePoint <= 0xFFE6)) {
+    return 'F';
+  }
+  if ((0x20A9 == codePoint) ||
+      (0xFF61 <= codePoint && codePoint <= 0xFFBE) ||
+      (0xFFC2 <= codePoint && codePoint <= 0xFFC7) ||
+      (0xFFCA <= codePoint && codePoint <= 0xFFCF) ||
+      (0xFFD2 <= codePoint && codePoint <= 0xFFD7) ||
+      (0xFFDA <= codePoint && codePoint <= 0xFFDC) ||
+      (0xFFE8 <= codePoint && codePoint <= 0xFFEE)) {
+    return 'H';
+  }
+  if ((0x1100 <= codePoint && codePoint <= 0x115F) ||
+      (0x11A3 <= codePoint && codePoint <= 0x11A7) ||
+      (0x11FA <= codePoint && codePoint <= 0x11FF) ||
+      (0x2329 <= codePoint && codePoint <= 0x232A) ||
+      (0x2E80 <= codePoint && codePoint <= 0x2E99) ||
+      (0x2E9B <= codePoint && codePoint <= 0x2EF3) ||
+      (0x2F00 <= codePoint && codePoint <= 0x2FD5) ||
+      (0x2FF0 <= codePoint && codePoint <= 0x2FFB) ||
+      (0x3001 <= codePoint && codePoint <= 0x303E) ||
+      (0x3041 <= codePoint && codePoint <= 0x3096) ||
+      (0x3099 <= codePoint && codePoint <= 0x30FF) ||
+      (0x3105 <= codePoint && codePoint <= 0x312D) ||
+      (0x3131 <= codePoint && codePoint <= 0x318E) ||
+      (0x3190 <= codePoint && codePoint <= 0x31BA) ||
+      (0x31C0 <= codePoint && codePoint <= 0x31E3) ||
+      (0x31F0 <= codePoint && codePoint <= 0x321E) ||
+      (0x3220 <= codePoint && codePoint <= 0x3247) ||
+      (0x3250 <= codePoint && codePoint <= 0x32FE) ||
+      (0x3300 <= codePoint && codePoint <= 0x4DBF) ||
+      (0x4E00 <= codePoint && codePoint <= 0xA48C) ||
+      (0xA490 <= codePoint && codePoint <= 0xA4C6) ||
+      (0xA960 <= codePoint && codePoint <= 0xA97C) ||
+      (0xAC00 <= codePoint && codePoint <= 0xD7A3) ||
+      (0xD7B0 <= codePoint && codePoint <= 0xD7C6) ||
+      (0xD7CB <= codePoint && codePoint <= 0xD7FB) ||
+      (0xF900 <= codePoint && codePoint <= 0xFAFF) ||
+      (0xFE10 <= codePoint && codePoint <= 0xFE19) ||
+      (0xFE30 <= codePoint && codePoint <= 0xFE52) ||
+      (0xFE54 <= codePoint && codePoint <= 0xFE66) ||
+      (0xFE68 <= codePoint && codePoint <= 0xFE6B) ||
+      (0x1B000 <= codePoint && codePoint <= 0x1B001) ||
+      (0x1F200 <= codePoint && codePoint <= 0x1F202) ||
+      (0x1F210 <= codePoint && codePoint <= 0x1F23A) ||
+      (0x1F240 <= codePoint && codePoint <= 0x1F248) ||
+      (0x1F250 <= codePoint && codePoint <= 0x1F251) ||
+      (0x20000 <= codePoint && codePoint <= 0x2F73F) ||
+      (0x2B740 <= codePoint && codePoint <= 0x2FFFD) ||
+      (0x30000 <= codePoint && codePoint <= 0x3FFFD)) {
+    return 'W';
+  }
+  if ((0x0020 <= codePoint && codePoint <= 0x007E) ||
+      (0x00A2 <= codePoint && codePoint <= 0x00A3) ||
+      (0x00A5 <= codePoint && codePoint <= 0x00A6) ||
+      (0x00AC == codePoint) ||
+      (0x00AF == codePoint) ||
+      (0x27E6 <= codePoint && codePoint <= 0x27ED) ||
+      (0x2985 <= codePoint && codePoint <= 0x2986)) {
+    return 'Na';
+  }
+  if ((0x00A1 == codePoint) ||
+      (0x00A4 == codePoint) ||
+      (0x00A7 <= codePoint && codePoint <= 0x00A8) ||
+      (0x00AA == codePoint) ||
+      (0x00AD <= codePoint && codePoint <= 0x00AE) ||
+      (0x00B0 <= codePoint && codePoint <= 0x00B4) ||
+      (0x00B6 <= codePoint && codePoint <= 0x00BA) ||
+      (0x00BC <= codePoint && codePoint <= 0x00BF) ||
+      (0x00C6 == codePoint) ||
+      (0x00D0 == codePoint) ||
+      (0x00D7 <= codePoint && codePoint <= 0x00D8) ||
+      (0x00DE <= codePoint && codePoint <= 0x00E1) ||
+      (0x00E6 == codePoint) ||
+      (0x00E8 <= codePoint && codePoint <= 0x00EA) ||
+      (0x00EC <= codePoint && codePoint <= 0x00ED) ||
+      (0x00F0 == codePoint) ||
+      (0x00F2 <= codePoint && codePoint <= 0x00F3) ||
+      (0x00F7 <= codePoint && codePoint <= 0x00FA) ||
+      (0x00FC == codePoint) ||
+      (0x00FE == codePoint) ||
+      (0x0101 == codePoint) ||
+      (0x0111 == codePoint) ||
+      (0x0113 == codePoint) ||
+      (0x011B == codePoint) ||
+      (0x0126 <= codePoint && codePoint <= 0x0127) ||
+      (0x012B == codePoint) ||
+      (0x0131 <= codePoint && codePoint <= 0x0133) ||
+      (0x0138 == codePoint) ||
+      (0x013F <= codePoint && codePoint <= 0x0142) ||
+      (0x0144 == codePoint) ||
+      (0x0148 <= codePoint && codePoint <= 0x014B) ||
+      (0x014D == codePoint) ||
+      (0x0152 <= codePoint && codePoint <= 0x0153) ||
+      (0x0166 <= codePoint && codePoint <= 0x0167) ||
+      (0x016B == codePoint) ||
+      (0x01CE == codePoint) ||
+      (0x01D0 == codePoint) ||
+      (0x01D2 == codePoint) ||
+      (0x01D4 == codePoint) ||
+      (0x01D6 == codePoint) ||
+      (0x01D8 == codePoint) ||
+      (0x01DA == codePoint) ||
+      (0x01DC == codePoint) ||
+      (0x0251 == codePoint) ||
+      (0x0261 == codePoint) ||
+      (0x02C4 == codePoint) ||
+      (0x02C7 == codePoint) ||
+      (0x02C9 <= codePoint && codePoint <= 0x02CB) ||
+      (0x02CD == codePoint) ||
+      (0x02D0 == codePoint) ||
+      (0x02D8 <= codePoint && codePoint <= 0x02DB) ||
+      (0x02DD == codePoint) ||
+      (0x02DF == codePoint) ||
+      (0x0300 <= codePoint && codePoint <= 0x036F) ||
+      (0x0391 <= codePoint && codePoint <= 0x03A1) ||
+      (0x03A3 <= codePoint && codePoint <= 0x03A9) ||
+      (0x03B1 <= codePoint && codePoint <= 0x03C1) ||
+      (0x03C3 <= codePoint && codePoint <= 0x03C9) ||
+      (0x0401 == codePoint) ||
+      (0x0410 <= codePoint && codePoint <= 0x044F) ||
+      (0x0451 == codePoint) ||
+      (0x2010 == codePoint) ||
+      (0x2013 <= codePoint && codePoint <= 0x2016) ||
+      (0x2018 <= codePoint && codePoint <= 0x2019) ||
+      (0x201C <= codePoint && codePoint <= 0x201D) ||
+      (0x2020 <= codePoint && codePoint <= 0x2022) ||
+      (0x2024 <= codePoint && codePoint <= 0x2027) ||
+      (0x2030 == codePoint) ||
+      (0x2032 <= codePoint && codePoint <= 0x2033) ||
+      (0x2035 == codePoint) ||
+      (0x203B == codePoint) ||
+      (0x203E == codePoint) ||
+      (0x2074 == codePoint) ||
+      (0x207F == codePoint) ||
+      (0x2081 <= codePoint && codePoint <= 0x2084) ||
+      (0x20AC == codePoint) ||
+      (0x2103 == codePoint) ||
+      (0x2105 == codePoint) ||
+      (0x2109 == codePoint) ||
+      (0x2113 == codePoint) ||
+      (0x2116 == codePoint) ||
+      (0x2121 <= codePoint && codePoint <= 0x2122) ||
+      (0x2126 == codePoint) ||
+      (0x212B == codePoint) ||
+      (0x2153 <= codePoint && codePoint <= 0x2154) ||
+      (0x215B <= codePoint && codePoint <= 0x215E) ||
+      (0x2160 <= codePoint && codePoint <= 0x216B) ||
+      (0x2170 <= codePoint && codePoint <= 0x2179) ||
+      (0x2189 == codePoint) ||
+      (0x2190 <= codePoint && codePoint <= 0x2199) ||
+      (0x21B8 <= codePoint && codePoint <= 0x21B9) ||
+      (0x21D2 == codePoint) ||
+      (0x21D4 == codePoint) ||
+      (0x21E7 == codePoint) ||
+      (0x2200 == codePoint) ||
+      (0x2202 <= codePoint && codePoint <= 0x2203) ||
+      (0x2207 <= codePoint && codePoint <= 0x2208) ||
+      (0x220B == codePoint) ||
+      (0x220F == codePoint) ||
+      (0x2211 == codePoint) ||
+      (0x2215 == codePoint) ||
+      (0x221A == codePoint) ||
+      (0x221D <= codePoint && codePoint <= 0x2220) ||
+      (0x2223 == codePoint) ||
+      (0x2225 == codePoint) ||
+      (0x2227 <= codePoint && codePoint <= 0x222C) ||
+      (0x222E == codePoint) ||
+      (0x2234 <= codePoint && codePoint <= 0x2237) ||
+      (0x223C <= codePoint && codePoint <= 0x223D) ||
+      (0x2248 == codePoint) ||
+      (0x224C == codePoint) ||
+      (0x2252 == codePoint) ||
+      (0x2260 <= codePoint && codePoint <= 0x2261) ||
+      (0x2264 <= codePoint && codePoint <= 0x2267) ||
+      (0x226A <= codePoint && codePoint <= 0x226B) ||
+      (0x226E <= codePoint && codePoint <= 0x226F) ||
+      (0x2282 <= codePoint && codePoint <= 0x2283) ||
+      (0x2286 <= codePoint && codePoint <= 0x2287) ||
+      (0x2295 == codePoint) ||
+      (0x2299 == codePoint) ||
+      (0x22A5 == codePoint) ||
+      (0x22BF == codePoint) ||
+      (0x2312 == codePoint) ||
+      (0x2460 <= codePoint && codePoint <= 0x24E9) ||
+      (0x24EB <= codePoint && codePoint <= 0x254B) ||
+      (0x2550 <= codePoint && codePoint <= 0x2573) ||
+      (0x2580 <= codePoint && codePoint <= 0x258F) ||
+      (0x2592 <= codePoint && codePoint <= 0x2595) ||
+      (0x25A0 <= codePoint && codePoint <= 0x25A1) ||
+      (0x25A3 <= codePoint && codePoint <= 0x25A9) ||
+      (0x25B2 <= codePoint && codePoint <= 0x25B3) ||
+      (0x25B6 <= codePoint && codePoint <= 0x25B7) ||
+      (0x25BC <= codePoint && codePoint <= 0x25BD) ||
+      (0x25C0 <= codePoint && codePoint <= 0x25C1) ||
+      (0x25C6 <= codePoint && codePoint <= 0x25C8) ||
+      (0x25CB == codePoint) ||
+      (0x25CE <= codePoint && codePoint <= 0x25D1) ||
+      (0x25E2 <= codePoint && codePoint <= 0x25E5) ||
+      (0x25EF == codePoint) ||
+      (0x2605 <= codePoint && codePoint <= 0x2606) ||
+      (0x2609 == codePoint) ||
+      (0x260E <= codePoint && codePoint <= 0x260F) ||
+      (0x2614 <= codePoint && codePoint <= 0x2615) ||
+      (0x261C == codePoint) ||
+      (0x261E == codePoint) ||
+      (0x2640 == codePoint) ||
+      (0x2642 == codePoint) ||
+      (0x2660 <= codePoint && codePoint <= 0x2661) ||
+      (0x2663 <= codePoint && codePoint <= 0x2665) ||
+      (0x2667 <= codePoint && codePoint <= 0x266A) ||
+      (0x266C <= codePoint && codePoint <= 0x266D) ||
+      (0x266F == codePoint) ||
+      (0x269E <= codePoint && codePoint <= 0x269F) ||
+      (0x26BE <= codePoint && codePoint <= 0x26BF) ||
+      (0x26C4 <= codePoint && codePoint <= 0x26CD) ||
+      (0x26CF <= codePoint && codePoint <= 0x26E1) ||
+      (0x26E3 == codePoint) ||
+      (0x26E8 <= codePoint && codePoint <= 0x26FF) ||
+      (0x273D == codePoint) ||
+      (0x2757 == codePoint) ||
+      (0x2776 <= codePoint && codePoint <= 0x277F) ||
+      (0x2B55 <= codePoint && codePoint <= 0x2B59) ||
+      (0x3248 <= codePoint && codePoint <= 0x324F) ||
+      (0xE000 <= codePoint && codePoint <= 0xF8FF) ||
+      (0xFE00 <= codePoint && codePoint <= 0xFE0F) ||
+      (0xFFFD == codePoint) ||
+      (0x1F100 <= codePoint && codePoint <= 0x1F10A) ||
+      (0x1F110 <= codePoint && codePoint <= 0x1F12D) ||
+      (0x1F130 <= codePoint && codePoint <= 0x1F169) ||
+      (0x1F170 <= codePoint && codePoint <= 0x1F19A) ||
+      (0xE0100 <= codePoint && codePoint <= 0xE01EF) ||
+      (0xF0000 <= codePoint && codePoint <= 0xFFFFD) ||
+      (0x100000 <= codePoint && codePoint <= 0x10FFFD)) {
+    return 'A';
+  }
+
+  return 'N';
+};
+
+eaw.characterLength = function(character) {
+  var code = this.eastAsianWidth(character);
+  if (code == 'F' || code == 'W' || code == 'A') {
+    return 2;
+  } else {
+    return 1;
+  }
+};
+
+eaw.length = function(string) {
+  var len = 0;
+  for (var i = 0; i < string.length; i++) {
+    len = len + this.characterLength(string.charAt(i));
+  }
+  return len;
+};
+
+eaw.slice = function(text, start, end) {
+  start = start ? start : 0;
+  end = end ? end : 1;
+  var result = '';
+  for (var i = 0; i < text.length; i++) {
+    var char = text.charAt(i);
+    var eawLen = eaw.length(result + char);
+    if (eawLen >= 1 + start && eawLen < 1 + end) {
+      result += char
+    }
+  }
+  return result;
+};
+
+
+/*======================================*/
+
+
+highlight = function(){
+/*
+Syntax highlighting with language autodetection.
+https://highlightjs.org/
+*/
+
+(function(factory) {
+  // Setup highlight.js for different environments. First is Node.js or
+  // CommonJS.
+  if(typeof exports !== 'undefined') {
+    factory(exports);
+  } else {
+    // Export hljs globally even when using AMD for cases when this script
+    // is loaded with others that may still expect a global hljs.
+    window.hljs = factory({});
+
+    // Finally register the global hljs with AMD.
+    if(typeof define === 'function' && define.amd) {
+      define('hljs', [], function() {
+        return window.hljs;
+      });
+    }
+  }
+
+}(function(hljs) {
+
+  /* Utility functions */
+
+  function escape(value) {
+    return value.replace(/&/gm, '&amp;').replace(/</gm, '&lt;').replace(/>/gm, '&gt;');
+  }
+
+  function tag(node) {
+    return node.nodeName.toLowerCase();
+  }
+
+  function testRe(re, lexeme) {
+    var match = re && re.exec(lexeme);
+    return match && match.index == 0;
+  }
+
+  function isNotHighlighted(language) {
+    return /no-?highlight|plain|text/.test(language);
+  }
+
+  function blockLanguage(block) {
+    var i, match, length,
+        classes = block.className + ' ';
+
+    classes += block.parentNode ? block.parentNode.className : '';
+
+    // language-* takes precedence over non-prefixed class names and
+    match = /\blang(?:uage)?-([\w-]+)\b/.exec(classes);
+    if (match) {
+      return getLanguage(match[1]) ? match[1] : 'no-highlight';
+    }
+
+    classes = classes.split(/\s+/);
+    for(i = 0, length = classes.length; i < length; i++) {
+      if(getLanguage(classes[i]) || isNotHighlighted(classes[i])) {
+        return classes[i];
+      }
+    }
+
+  }
+
+  function inherit(parent, obj) {
+    var result = {}, key;
+    for (key in parent)
+      result[key] = parent[key];
+    if (obj)
+      for (key in obj)
+        result[key] = obj[key];
+    return result;
+  }
+
+  /* Stream merging */
+
+  function nodeStream(node) {
+    var result = [];
+    (function _nodeStream(node, offset) {
+      for (var child = node.firstChild; child; child = child.nextSibling) {
+        if (child.nodeType == 3)
+          offset += child.nodeValue.length;
+        else if (child.nodeType == 1) {
+          result.push({
+            event: 'start',
+            offset: offset,
+            node: child
+          });
+          offset = _nodeStream(child, offset);
+          // Prevent void elements from having an end tag that would actually
+          // double them in the output. There are more void elements in HTML
+          // but we list only those realistically expected in code display.
+          if (!tag(child).match(/br|hr|img|input/)) {
+            result.push({
+              event: 'stop',
+              offset: offset,
+              node: child
+            });
+          }
+        }
+      }
+      return offset;
+    })(node, 0);
+    return result;
+  }
+
+  function mergeStreams(original, highlighted, value) {
+    var processed = 0;
+    var result = '';
+    var nodeStack = [];
+
+    function selectStream() {
+      if (!original.length || !highlighted.length) {
+        return original.length ? original : highlighted;
+      }
+      if (original[0].offset != highlighted[0].offset) {
+        return (original[0].offset < highlighted[0].offset) ? original : highlighted;
+      }
+
+      /*
+      To avoid starting the stream just before it should stop the order is
+      ensured that original always starts first and closes last:
+      if (event1 == 'start' && event2 == 'start')
+        return original;
+      if (event1 == 'start' && event2 == 'stop')
+        return highlighted;
+      if (event1 == 'stop' && event2 == 'start')
+        return original;
+      if (event1 == 'stop' && event2 == 'stop')
+        return highlighted;
+      ... which is collapsed to:
+      */
+      return highlighted[0].event == 'start' ? original : highlighted;
+    }
+
+    function open(node) {
+      function attr_str(a) {return ' ' + a.nodeName + '="' + escape(a.value) + '"';}
+      result += '<' + tag(node) + Array.prototype.map.call(node.attributes, attr_str).join('') + '>';
+    }
+
+    function close(node) {
+      result += '</' + tag(node) + '>';
+    }
+
+    function render(event) {
+      (event.event == 'start' ? open : close)(event.node);
+    }
+
+    while (original.length || highlighted.length) {
+      var stream = selectStream();
+      result += escape(value.substr(processed, stream[0].offset - processed));
+      processed = stream[0].offset;
+      if (stream == original) {
+        /*
+        On any opening or closing tag of the original markup we first close
+        the entire highlighted node stack, then render the original tag along
+        with all the following original tags at the same offset and then
+        reopen all the tags on the highlighted stack.
+        */
+        nodeStack.reverse().forEach(close);
+        do {
+          render(stream.splice(0, 1)[0]);
+          stream = selectStream();
+        } while (stream == original && stream.length && stream[0].offset == processed);
+        nodeStack.reverse().forEach(open);
+      } else {
+        if (stream[0].event == 'start') {
+          nodeStack.push(stream[0].node);
+        } else {
+          nodeStack.pop();
+        }
+        render(stream.splice(0, 1)[0]);
+      }
+    }
+    return result + escape(value.substr(processed));
+  }
+
+  /* Initialization */
+
+  function compileLanguage(language) {
+
+    function reStr(re) {
+        return (re && re.source) || re;
+    }
+
+    function langRe(value, global) {
+      return new RegExp(
+        reStr(value),
+        'm' + (language.case_insensitive ? 'i' : '') + (global ? 'g' : '')
+      );
+    }
+
+    function compileMode(mode, parent) {
+      if (mode.compiled)
+        return;
+      mode.compiled = true;
+
+      mode.keywords = mode.keywords || mode.beginKeywords;
+      if (mode.keywords) {
+        var compiled_keywords = {};
+
+        var flatten = function(className, str) {
+          if (language.case_insensitive) {
+            str = str.toLowerCase();
+          }
+          str.split(' ').forEach(function(kw) {
+            var pair = kw.split('|');
+            compiled_keywords[pair[0]] = [className, pair[1] ? Number(pair[1]) : 1];
+          });
+        };
+
+        if (typeof mode.keywords == 'string') { // string
+          flatten('keyword', mode.keywords);
+        } else {
+          Object.keys(mode.keywords).forEach(function (className) {
+            flatten(className, mode.keywords[className]);
+          });
+        }
+        mode.keywords = compiled_keywords;
+      }
+      mode.lexemesRe = langRe(mode.lexemes || /\b\w+\b/, true);
+
+      if (parent) {
+        if (mode.beginKeywords) {
+          mode.begin = '\\b(' + mode.beginKeywords.split(' ').join('|') + ')\\b';
+        }
+        if (!mode.begin)
+          mode.begin = /\B|\b/;
+        mode.beginRe = langRe(mode.begin);
+        if (!mode.end && !mode.endsWithParent)
+          mode.end = /\B|\b/;
+        if (mode.end)
+          mode.endRe = langRe(mode.end);
+        mode.terminator_end = reStr(mode.end) || '';
+        if (mode.endsWithParent && parent.terminator_end)
+          mode.terminator_end += (mode.end ? '|' : '') + parent.terminator_end;
+      }
+      if (mode.illegal)
+        mode.illegalRe = langRe(mode.illegal);
+      if (mode.relevance === undefined)
+        mode.relevance = 1;
+      if (!mode.contains) {
+        mode.contains = [];
+      }
+      var expanded_contains = [];
+      mode.contains.forEach(function(c) {
+        if (c.variants) {
+          c.variants.forEach(function(v) {expanded_contains.push(inherit(c, v));});
+        } else {
+          expanded_contains.push(c == 'self' ? mode : c);
+        }
+      });
+      mode.contains = expanded_contains;
+      mode.contains.forEach(function(c) {compileMode(c, mode);});
+
+      if (mode.starts) {
+        compileMode(mode.starts, parent);
+      }
+
+      var terminators =
+        mode.contains.map(function(c) {
+          return c.beginKeywords ? '\\.?(' + c.begin + ')\\.?' : c.begin;
+        })
+        .concat([mode.terminator_end, mode.illegal])
+        .map(reStr)
+        .filter(Boolean);
+      mode.terminators = terminators.length ? langRe(terminators.join('|'), true) : {exec: function(/*s*/) {return null;}};
+    }
+
+    compileMode(language);
+  }
+
+  /*
+  Core highlighting function. Accepts a language name, or an alias, and a
+  string with the code to highlight. Returns an object with the following
+  properties:
+  - relevance (int)
+  - value (an HTML string with highlighting markup)
+  */
+  function highlight(name, value, ignore_illegals, continuation) {
+
+    function subMode(lexeme, mode) {
+      for (var i = 0; i < mode.contains.length; i++) {
+        if (testRe(mode.contains[i].beginRe, lexeme)) {
+          return mode.contains[i];
+        }
+      }
+    }
+
+    function endOfMode(mode, lexeme) {
+      if (testRe(mode.endRe, lexeme)) {
+        while (mode.endsParent && mode.parent) {
+          mode = mode.parent;
+        }
+        return mode;
+      }
+      if (mode.endsWithParent) {
+        return endOfMode(mode.parent, lexeme);
+      }
+    }
+
+    function isIllegal(lexeme, mode) {
+      return !ignore_illegals && testRe(mode.illegalRe, lexeme);
+    }
+
+    function keywordMatch(mode, match) {
+      var match_str = language.case_insensitive ? match[0].toLowerCase() : match[0];
+      return mode.keywords.hasOwnProperty(match_str) && mode.keywords[match_str];
+    }
+
+    function buildSpan(classname, insideSpan, leaveOpen, noPrefix) {
+      var classPrefix = noPrefix ? '' : options.classPrefix,
+          openSpan    = '<span class="' + classPrefix,
+          closeSpan   = leaveOpen ? '' : '</span>';
+
+      openSpan += classname + '">';
+
+      return openSpan + insideSpan + closeSpan;
+    }
+
+    function processKeywords() {
+      if (!top.keywords)
+        return escape(mode_buffer);
+      var result = '';
+      var last_index = 0;
+      top.lexemesRe.lastIndex = 0;
+      var match = top.lexemesRe.exec(mode_buffer);
+      while (match) {
+        result += escape(mode_buffer.substr(last_index, match.index - last_index));
+        var keyword_match = keywordMatch(top, match);
+        if (keyword_match) {
+          relevance += keyword_match[1];
+          result += buildSpan(keyword_match[0], escape(match[0]));
+        } else {
+          result += escape(match[0]);
+        }
+        last_index = top.lexemesRe.lastIndex;
+        match = top.lexemesRe.exec(mode_buffer);
+      }
+      return result + escape(mode_buffer.substr(last_index));
+    }
+
+    function processSubLanguage() {
+      if (top.subLanguage && !languages[top.subLanguage]) {
+        return escape(mode_buffer);
+      }
+      var result = top.subLanguage ? highlight(top.subLanguage, mode_buffer, true, continuations[top.subLanguage]) : highlightAuto(mode_buffer);
+      // Counting embedded language score towards the host language may be disabled
+      // with zeroing the containing mode relevance. Usecase in point is Markdown that
+      // allows XML everywhere and makes every XML snippet to have a much larger Markdown
+      // score.
+      if (top.relevance > 0) {
+        relevance += result.relevance;
+      }
+      if (top.subLanguageMode == 'continuous') {
+        continuations[top.subLanguage] = result.top;
+      }
+      return buildSpan(result.language, result.value, false, true);
+    }
+
+    function processBuffer() {
+      return top.subLanguage !== undefined ? processSubLanguage() : processKeywords();
+    }
+
+    function startNewMode(mode, lexeme) {
+      var markup = mode.className? buildSpan(mode.className, '', true): '';
+      if (mode.returnBegin) {
+        result += markup;
+        mode_buffer = '';
+      } else if (mode.excludeBegin) {
+        result += escape(lexeme) + markup;
+        mode_buffer = '';
+      } else {
+        result += markup;
+        mode_buffer = lexeme;
+      }
+      top = Object.create(mode, {parent: {value: top}});
+    }
+
+    function processLexeme(buffer, lexeme) {
+
+      mode_buffer += buffer;
+      if (lexeme === undefined) {
+        result += processBuffer();
+        return 0;
+      }
+
+      var new_mode = subMode(lexeme, top);
+      if (new_mode) {
+        result += processBuffer();
+        startNewMode(new_mode, lexeme);
+        return new_mode.returnBegin ? 0 : lexeme.length;
+      }
+
+      var end_mode = endOfMode(top, lexeme);
+      if (end_mode) {
+        var origin = top;
+        if (!(origin.returnEnd || origin.excludeEnd)) {
+          mode_buffer += lexeme;
+        }
+        result += processBuffer();
+        do {
+          if (top.className) {
+            result += '</span>';
+          }
+          relevance += top.relevance;
+          top = top.parent;
+        } while (top != end_mode.parent);
+        if (origin.excludeEnd) {
+          result += escape(lexeme);
+        }
+        mode_buffer = '';
+        if (end_mode.starts) {
+          startNewMode(end_mode.starts, '');
+        }
+        return origin.returnEnd ? 0 : lexeme.length;
+      }
+
+      if (isIllegal(lexeme, top))
+        throw new Error('Illegal lexeme "' + lexeme + '" for mode "' + (top.className || '<unnamed>') + '"');
+
+      /*
+      Parser should not reach this point as all types of lexemes should be caught
+      earlier, but if it does due to some bug make sure it advances at least one
+      character forward to prevent infinite looping.
+      */
+      mode_buffer += lexeme;
+      return lexeme.length || 1;
+    }
+
+    var language = getLanguage(name);
+    if (!language) {
+      throw new Error('Unknown language: "' + name + '"');
+    }
+
+    compileLanguage(language);
+    var top = continuation || language;
+    var continuations = {}; // keep continuations for sub-languages
+    var result = '', current;
+    for(current = top; current != language; current = current.parent) {
+      if (current.className) {
+        result = buildSpan(current.className, '', true) + result;
+      }
+    }
+    var mode_buffer = '';
+    var relevance = 0;
+    try {
+      var match, count, index = 0;
+      while (true) {
+        top.terminators.lastIndex = index;
+        match = top.terminators.exec(value);
+        if (!match)
+          break;
+        count = processLexeme(value.substr(index, match.index - index), match[0]);
+        index = match.index + count;
+      }
+      processLexeme(value.substr(index));
+      for(current = top; current.parent; current = current.parent) { // close dangling modes
+        if (current.className) {
+          result += '</span>';
+        }
+      }
+      return {
+        relevance: relevance,
+        value: result,
+        language: name,
+        top: top
+      };
+    } catch (e) {
+      if (e.message.indexOf('Illegal') != -1) {
+        return {
+          relevance: 0,
+          value: escape(value)
+        };
+      } else {
+        throw e;
+      }
+    }
+  }
+
+  /*
+  Highlighting with language detection. Accepts a string with the code to
+  highlight. Returns an object with the following properties:
+  - language (detected language)
+  - relevance (int)
+  - value (an HTML string with highlighting markup)
+  - second_best (object with the same structure for second-best heuristically
+    detected language, may be absent)
+  */
+  function highlightAuto(text, languageSubset) {
+    languageSubset = languageSubset || options.languages || Object.keys(languages);
+    var result = {
+      relevance: 0,
+      value: escape(text)
+    };
+    var second_best = result;
+    languageSubset.forEach(function(name) {
+      if (!getLanguage(name)) {
+        return;
+      }
+      var current = highlight(name, text, false);
+      current.language = name;
+      if (current.relevance > second_best.relevance) {
+        second_best = current;
+      }
+      if (current.relevance > result.relevance) {
+        second_best = result;
+        result = current;
+      }
+    });
+    if (second_best.language) {
+      result.second_best = second_best;
+    }
+    return result;
+  }
+
+  /*
+  Post-processing of the highlighted markup:
+  - replace TABs with something more useful
+  - replace real line-breaks with '<br>' for non-pre containers
+  */
+  function fixMarkup(value) {
+    if (options.tabReplace) {
+      value = value.replace(/^((<[^>]+>|\t)+)/gm, function(match, p1 /*..., offset, s*/) {
+        return p1.replace(/\t/g, options.tabReplace);
+      });
+    }
+    if (options.useBR) {
+      value = value.replace(/\n/g, '<br>');
+    }
+    return value;
+  }
+
+  function buildClassName(prevClassName, currentLang, resultLang) {
+    var language = currentLang ? aliases[currentLang] : resultLang,
+        result   = [prevClassName.trim()];
+
+    if (!prevClassName.match(/\bhljs\b/)) {
+      result.push('hljs');
+    }
+
+    if (prevClassName.indexOf(language) === -1) {
+      result.push(language);
+    }
+
+    return result.join(' ').trim();
+  }
+
+  /*
+  Applies highlighting to a DOM node containing code. Accepts a DOM node and
+  two optional parameters for fixMarkup.
+  */
+  function highlightBlock(block) {
+    var language = blockLanguage(block);
+    if (isNotHighlighted(language))
+        return;
+
+    var node;
+    if (options.useBR) {
+      node = currentScript.ownerDocument.createElementNS('http://www.w3.org/1999/xhtml', 'div');
+      node.innerHTML = block.innerHTML.replace(/\n/g, '').replace(/<br[ \/]*>/g, '\n');
+    } else {
+      node = block;
+    }
+    var text = node.textContent;
+    var result = language ? highlight(language, text, true) : highlightAuto(text);
+
+    var originalStream = nodeStream(node);
+    if (originalStream.length) {
+      var resultNode = currentScript.ownerDocument.createElementNS('http://www.w3.org/1999/xhtml', 'div');
+      resultNode.innerHTML = result.value;
+      result.value = mergeStreams(originalStream, nodeStream(resultNode), text);
+    }
+    result.value = fixMarkup(result.value);
+
+    block.innerHTML = result.value;
+    block.className = buildClassName(block.className, language, result.language);
+    block.result = {
+      language: result.language,
+      re: result.relevance
+    };
+    if (result.second_best) {
+      block.second_best = {
+        language: result.second_best.language,
+        re: result.second_best.relevance
+      };
+    }
+  }
+
+  var options = {
+    classPrefix: 'hljs-',
+    tabReplace: null,
+    useBR: false,
+    languages: undefined
+  };
+
+  /*
+  Updates highlight.js global options with values passed in the form of an object
+  */
+  function configure(user_options) {
+    options = inherit(options, user_options);
+  }
+
+  /*
+  Applies highlighting to all <pre><code>..</code></pre> blocks on a page.
+  */
+  function initHighlighting() {
+    if (initHighlighting.called)
+      return;
+    initHighlighting.called = true;
+
+    var blocks = currentScript.ownerDocument.querySelectorAll('pre code');
+    Array.prototype.forEach.call(blocks, highlightBlock);
+  }
+
+  /*
+  Attaches highlighting to the page load event.
+  */
+  function initHighlightingOnLoad() {
+    addEventListener('DOMContentLoaded', initHighlighting, false);
+    addEventListener('load', initHighlighting, false);
+  }
+
+  var languages = {};
+  var aliases = {};
+
+  function registerLanguage(name, language) {
+    var lang = languages[name] = language(hljs);
+    if (lang.aliases) {
+      lang.aliases.forEach(function(alias) {aliases[alias] = name;});
+    }
+  }
+
+  function listLanguages() {
+    return Object.keys(languages);
+  }
+
+  function getLanguage(name) {
+    return languages[name] || languages[aliases[name]];
+  }
+
+  /* Interface definition */
+
+  hljs.highlight = highlight;
+  hljs.highlightAuto = highlightAuto;
+  hljs.fixMarkup = fixMarkup;
+  hljs.highlightBlock = highlightBlock;
+  hljs.configure = configure;
+  hljs.initHighlighting = initHighlighting;
+  hljs.initHighlightingOnLoad = initHighlightingOnLoad;
+  hljs.registerLanguage = registerLanguage;
+  hljs.listLanguages = listLanguages;
+  hljs.getLanguage = getLanguage;
+  hljs.inherit = inherit;
+
+  // Common regexps
+  hljs.IDENT_RE = '[a-zA-Z]\\w*';
+  hljs.UNDERSCORE_IDENT_RE = '[a-zA-Z_]\\w*';
+  hljs.NUMBER_RE = '\\b\\d+(\\.\\d+)?';
+  hljs.C_NUMBER_RE = '\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)'; // 0x..., 0..., decimal, float
+  hljs.BINARY_NUMBER_RE = '\\b(0b[01]+)'; // 0b...
+  hljs.RE_STARTERS_RE = '!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|-|-=|/=|/|:|;|<<|<<=|<=|<|===|==|=|>>>=|>>=|>=|>>>|>>|>|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~';
+
+  // Common modes
+  hljs.BACKSLASH_ESCAPE = {
+    begin: '\\\\[\\s\\S]', relevance: 0
+  };
+  hljs.APOS_STRING_MODE = {
+    className: 'string',
+    begin: '\'', end: '\'',
+    illegal: '\\n',
+    contains: [hljs.BACKSLASH_ESCAPE]
+  };
+  hljs.QUOTE_STRING_MODE = {
+    className: 'string',
+    begin: '"', end: '"',
+    illegal: '\\n',
+    contains: [hljs.BACKSLASH_ESCAPE]
+  };
+  hljs.PHRASAL_WORDS_MODE = {
+    begin: /\b(a|an|the|are|I|I'm|isn't|don't|doesn't|won't|but|just|should|pretty|simply|enough|gonna|going|wtf|so|such)\b/
+  };
+  hljs.COMMENT = function (begin, end, inherits) {
+    var mode = hljs.inherit(
+      {
+        className: 'comment',
+        begin: begin, end: end,
+        contains: []
+      },
+      inherits || {}
+    );
+    mode.contains.push(hljs.PHRASAL_WORDS_MODE);
+    mode.contains.push({
+      className: 'doctag',
+      begin: "(?:TODO|FIXME|NOTE|BUG|XXX):",
+      relevance: 0
+    });
+    return mode;
+  };
+  hljs.C_LINE_COMMENT_MODE = hljs.COMMENT('//', '$');
+  hljs.C_BLOCK_COMMENT_MODE = hljs.COMMENT('/\\*', '\\*/');
+  hljs.HASH_COMMENT_MODE = hljs.COMMENT('#', '$');
+  hljs.NUMBER_MODE = {
+    className: 'number',
+    begin: hljs.NUMBER_RE,
+    relevance: 0
+  };
+  hljs.C_NUMBER_MODE = {
+    className: 'number',
+    begin: hljs.C_NUMBER_RE,
+    relevance: 0
+  };
+  hljs.BINARY_NUMBER_MODE = {
+    className: 'number',
+    begin: hljs.BINARY_NUMBER_RE,
+    relevance: 0
+  };
+  hljs.CSS_NUMBER_MODE = {
+    className: 'number',
+    begin: hljs.NUMBER_RE + '(' +
+      '%|em|ex|ch|rem'  +
+      '|vw|vh|vmin|vmax' +
+      '|cm|mm|in|pt|pc|px' +
+      '|deg|grad|rad|turn' +
+      '|s|ms' +
+      '|Hz|kHz' +
+      '|dpi|dpcm|dppx' +
+      ')?',
+    relevance: 0
+  };
+  hljs.REGEXP_MODE = {
+    className: 'regexp',
+    begin: /\//, end: /\/[gimuy]*/,
+    illegal: /\n/,
+    contains: [
+      hljs.BACKSLASH_ESCAPE,
+      {
+        begin: /\[/, end: /\]/,
+        relevance: 0,
+        contains: [hljs.BACKSLASH_ESCAPE]
+      }
+    ]
+  };
+  hljs.TITLE_MODE = {
+    className: 'title',
+    begin: hljs.IDENT_RE,
+    relevance: 0
+  };
+  hljs.UNDERSCORE_TITLE_MODE = {
+    className: 'title',
+    begin: hljs.UNDERSCORE_IDENT_RE,
+    relevance: 0
+  };
+
+  return hljs;
+}));
+
+
+}
+
+
+</script>

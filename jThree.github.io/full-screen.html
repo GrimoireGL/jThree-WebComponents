@@ -1,0 +1,92 @@
+<div id="container01" style="border:10px #a00 solid; background:#f66; text-align:center;">
+  <input type="button" id="button01_request" value="フルスクリーン開始" style="width:200px; height:50px; margin-top:20px; margin-bottom:10px;"><br>
+  <input type="button" id="button01_exit" value="フルスクリーン終了" style="width:200px; height:50px; margin-bottom:20px;">
+</div>
+
+<script type="text/javascript">
+<!--
+// 匿名関数内で実行
+(function (){
+
+  // ------------------------------------------------------------
+  // エレメントをフルスクリーン表示する関数
+  // ------------------------------------------------------------
+  function ElementRequestFullscreen(element){
+    var list = [
+      "requestFullscreen",
+      "webkitRequestFullScreen",
+      "mozRequestFullScreen",
+      "msRequestFullscreen"
+    ];
+    var i;
+    var num = list.length;
+    for(i=0;i < num;i++){
+      if(element[list[i]]){
+        element[list[i]]();
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // ------------------------------------------------------------
+  // フルスクリーンを終了する関数
+  // ------------------------------------------------------------
+  function DocumentExitFullscreen(document_obj){
+    var list = [
+      "exitFullscreen",
+      "webkitExitFullscreen",
+      "mozCancelFullScreen",
+      "msExitFullscreen"
+    ];
+    var i;
+    var num = list.length;
+    for(i=0;i < num;i++){
+      if(document_obj[list[i]]){
+        document_obj[list[i]]();
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // ------------------------------------------------------------
+  // エレメントを取得
+  // ------------------------------------------------------------
+  // "button01_request" という ID 属性のエレメントを取得する
+  var button_request = document.getElementById("button01_request");
+
+  // "button01_exit" という ID 属性のエレメントを取得する
+  var button_exit = document.getElementById("button01_exit");
+
+  // "container01" という ID 属性のエレメントを取得する
+  var element_container = document.getElementById("container01");
+
+  // ------------------------------------------------------------
+  // イベントリスナーに対応している
+  // ------------------------------------------------------------
+  if(window.addEventListener){
+
+    // ------------------------------------------------------------
+    // リクエストボタンをクリックすると実行されるイベント
+    // ------------------------------------------------------------
+    button_request.addEventListener("click",function (e){
+
+      // エレメントをフルスクリーン表示する
+      ElementRequestFullscreen(element_container);
+
+    });
+
+    // ------------------------------------------------------------
+    // イグジットボタンをクリックすると実行されるイベント
+    // ------------------------------------------------------------
+    button_exit.addEventListener("click",function (e){
+
+      // フルスクリーンを終了する
+      DocumentExitFullscreen(document);
+
+    });
+  }
+})();
+//-->
+</script>
