@@ -24,6 +24,9 @@
         <j3-option class="refresh">
           <icon></icon>
         </j3-option>
+        <j3-option class="fullscreen">
+          <icon></icon>
+        </j3-option>
       </j3-options>
     </j3-wrap>
   </j3-editor>
@@ -144,6 +147,12 @@ j3-option icon{
 }
 j3-option.refresh icon{
   background-image: url("./Components/refresh.png");
+}
+j3-option.fullscreen icon{
+  background-image: url("./Components/expand.png");
+}
+j3-editor.full j3-option.fullscreen icon{
+  background-image: url("./Components/compress.png");
 }
 
 j3-option > div{
@@ -300,6 +309,9 @@ j3-screen.open{
       display: block;
       margin: 0 auto;
     }
+    j3-editor.full j3-wrap{
+      width: 100%;
+    }
    /* j3-screen:after{
       border-bottom: 0px solid transparent;
       border-left: 0px solid black;
@@ -357,6 +369,7 @@ j3-screen.open{
       background-image: url("./Components/pencil.png");
       background-size: cover;
     }
+
 /*   :host {display: block;}
    :host(.blue) {background-color: blue;}
    p{ color: darkred; }
@@ -449,6 +462,24 @@ j3-screen.open{
       }
     });
 
+    this.shadowRoot.querySelector("j3-option.fullscreen").addEventListener('click', function(){
+      // ------------------------------------------------------------
+      // エレメントを取得
+      // ------------------------------------------------------------
+
+      // "container01" という ID 属性のエレメントを取得する
+      var element_container = root.shadowRoot.querySelector("j3-editor");
+      if(element_container.classList.contains('full')){
+        DocumentExitFullscreen(document);
+        element_container.classList.remove('full');
+      }else{
+        element_container.classList.add('full');
+        ElementRequestFullscreen(element_container);
+      }
+
+
+
+    })
     this.shadowRoot.querySelector("j3-main textarea").addEventListener('scroll', function(e){
       root.shadowRoot.querySelector("j3-main textview").scrollTop = this.scrollTop;
       root.shadowRoot.querySelector("j3-main textview").scrollLeft = this.scrollLeft;
@@ -500,7 +531,7 @@ j3-screen.open{
       // console.log(resultString.replace(/\r?\n/g, ""));
 
 
-    var shift, ctrl;
+    // var shift, ctrl;
 
     // if (e != null) {
     //       keycode = e.which;
@@ -884,6 +915,49 @@ function coloringQuote(codeStr) {
   }
 
   return markupStr;
+}
+/*================================*/
+
+// ------------------------------------------------------------
+// エレメントをフルスクリーン表示する関数
+// ------------------------------------------------------------
+function ElementRequestFullscreen(element){
+  var list = [
+    "requestFullscreen",
+    "webkitRequestFullScreen",
+    "mozRequestFullScreen",
+    "msRequestFullscreen"
+  ];
+  var i;
+  var num = list.length;
+  for(i=0;i < num;i++){
+    if(element[list[i]]){
+      element[list[i]]();
+      return true;
+    }
+  }
+  return false;
+}
+
+// ------------------------------------------------------------
+// フルスクリーンを終了する関数
+// ------------------------------------------------------------
+function DocumentExitFullscreen(document_obj){
+  var list = [
+    "exitFullscreen",
+    "webkitExitFullscreen",
+    "mozCancelFullScreen",
+    "msExitFullscreen"
+  ];
+  var i;
+  var num = list.length;
+  for(i=0;i < num;i++){
+    if(document_obj[list[i]]){
+      document_obj[list[i]]();
+      return true;
+    }
+  }
+  return false;
 }
 
 
