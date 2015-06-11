@@ -18,7 +18,7 @@
           <j3-tab>Goml</j3-tab>
         </j3-tabs>
         <textarea></textarea>
-        <textview><caret><caret-inner></caret-inner></caret></textview>
+        <textview></textview>
       </j3-main>
       <j3-options>
         <j3-option class="refresh">
@@ -84,7 +84,7 @@ caret-inner{
   bottom: 0px;
   box-sizing: border-box;
   top: 1px;
-  left: -2px;
+  left: -1.5px;
   animation-name: caretAnimation;
   -webkit-animation-name: caretAnimation;
 
@@ -241,7 +241,7 @@ j3-main textarea ,j3-main textview{
   height: 93%;
   position: absolute;
   bottom: 0;
-  letter-spacing: 4px;
+  letter-spacing: 3px;
   word-wrap: break-word;
   font: normal normal normal 11px/normal 'monospace';
 }
@@ -466,6 +466,13 @@ j3-screen.open{
           text = coloring(text);
           text = coloringQuote(text);
       root.shadowRoot.querySelector("j3-main textview").innerHTML = text.replace("__caret__", "<caret><caret-inner></caret-inner></caret>").replace(/\r?\n/g, "<br>");
+    });
+    this.shadowRoot.querySelector("j3-main textarea").addEventListener('blur', function(e){
+      var text = this.value;
+      text = coloringRegExp(text);
+      text = coloring(text);
+      text = coloringQuote(text);
+      root.shadowRoot.querySelector("j3-main textview").innerHTML = text.replace(/\r?\n/g, "<br>");
     });
     this.shadowRoot.querySelector("j3-main textarea").addEventListener('keydown', function(e){
       if(e.keyCode == "13" || e.keyCode == "8"){
