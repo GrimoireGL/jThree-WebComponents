@@ -15,7 +15,7 @@
         <j3-tabs>
           <j3-tab class="active">HTML</j3-tab>
           <j3-tab>JavaScript</j3-tab>
-          <j3-tab>Goml</j3-tab>
+          <j3-tab>GOML</j3-tab>
         </j3-tabs>
         <textarea></textarea>
         <textview></textview>
@@ -52,7 +52,7 @@
 }
 
 .Coloring_comment {
-    color: blue;
+    color: rgb(115, 140, 153);
 }
 
 .Coloring_regexp {
@@ -214,6 +214,7 @@ j3-main{
   box-sizing: border-box;
 }
 j3-main j3-tabs{
+  z-index: 10;
   width: 100%;
   height: 7%;
   position: absolute;
@@ -421,7 +422,13 @@ j3-screen.open{
     xmlHttp.onload = function (e) {
       if (xmlHttp.readyState === 4) {
         if (xmlHttp.status === 200) {
-          root.shadowRoot.querySelector("editor-html").textContent = xmlHttp.responseText;
+          root.shadowRoot.querySelector("j3-main textarea").value = xmlHttp.responseText;
+          var text = xmlHttp.responseText;
+          text = replaceTag(text);
+          text = coloringRegExp(text);
+          text = coloring(text);
+          text = coloringQuote(text);
+          root.shadowRoot.querySelector("j3-main textview").innerHTML = text.replace(/\r?\n/g, "<br>");
           console.log(xmlHttp.responseText);
         } else {
           console.error(xmlHttp.statusText);
@@ -492,7 +499,7 @@ j3-screen.open{
       var targetString = "" + this.value;
       console.log(index);
       var resultString = targetString.substring(0, index);
-            var text = replaceTag(targetString.substring(0, index)) + "__caret__" + replaceTag(targetString.substring(index));
+          var text = replaceTag(targetString.substring(0, index)) + "__caret__" + replaceTag(targetString.substring(index));
           text = coloringRegExp(text);
           text = coloring(text);
           text = coloringQuote(text);
@@ -500,28 +507,32 @@ j3-screen.open{
     });
     this.shadowRoot.querySelector("j3-main textarea").addEventListener('blur', function(e){
       var text = this.value;
+      text = replaceTag(text);
       text = coloringRegExp(text);
       text = coloring(text);
       text = coloringQuote(text);
       root.shadowRoot.querySelector("j3-main textview").innerHTML = text.replace(/\r?\n/g, "<br>");
     });
+    var index ;
     this.shadowRoot.querySelector("j3-main textarea").addEventListener('keydown', function(e){
       if(e.keyCode == "13" || e.keyCode == "8"){
       }
       console.log(e.keyCode);
-      var index = this.selectionStart;
+
       var length = this.selectionEnd - index;
-      console.log("en" + this.selectionEnd);
       var targetString = "" + this.value;
       var text;
       // "BC" の切り出しを行う
       if (e.keyCode === 9) { //tab
         e.preventDefault();
-        this.value = replaceTag(targetString.substr(0, index) + '    ' + targetString.substr(index));
-        text = replaceTag(targetString.substr(0, index) + '    ' + "__caret__" + targetString.substr(index));
+        e.stopPropagation();
+        this.value = targetString.substr(0, index) + ' ' + targetString.substr(index);
+        index = index + 1;
+        targetString = this.value;
       }else{
-        text = replaceTag(targetString.substring(0, index)) + "__caret__" + replaceTag(targetString.substring(index));
+        index = this.selectionStart;
       }
+      text = replaceTag(targetString.substring(0, index)) + "__caret__" + replaceTag(targetString.substring(index));
       text = coloringRegExp(text);
       text = coloring(text);
       text = coloringQuote(text);
@@ -583,19 +594,21 @@ j3-screen.open{
 
     });
     this.shadowRoot.querySelector("j3-main textarea").addEventListener('keyup', function(e){
+      j3Editor.hello();
       var index = this.selectionStart;
       var targetString = "" + this.value;
       // "BC" の切り出しを行う
       var resultString = targetString.substring(0, index);
       var text;
       if (e.keyCode === 9) { //tab
+        e.stopPropagation();
         e.preventDefault();
       }else{
-      text = replaceTag(targetString.substring(0, index)) + "__caret__" + replaceTag(targetString.substring(index));
-      text = coloringRegExp(text);
-      text = coloring(text);
-      text = coloringQuote(text);
-      root.shadowRoot.querySelector("j3-main textview").innerHTML = text.replace("__caret__", "<caret><caret-inner></caret-inner></caret>").replace(/\r?\n/g, "<br>");
+        text = replaceTag(targetString.substring(0, index)) + "__caret__" + replaceTag(targetString.substring(index));
+        text = coloringRegExp(text);
+        text = coloring(text);
+        text = coloringQuote(text);
+        root.shadowRoot.querySelector("j3-main textview").innerHTML = text.replace("__caret__", "<caret><caret-inner></caret-inner></caret>").replace(/\r?\n/g, "<br>");
       }
       console.log(resultString.replace(/\r?\n/g, "<j3-br>").countR("<j3-br>"));
       console.log(resultString.replace(/\r?\n/g, ""));
@@ -609,6 +622,11 @@ j3-screen.open{
   });
 
 
+
+
+j3Editor.prototype.hello = function(){
+  console.log("hello")
+}
 // 指定の文字数
 
   String.prototype.countR = function(str) {
